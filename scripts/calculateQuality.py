@@ -7,6 +7,11 @@
 import matplotlib.pyplot as plt
 import numpy as np 
 import nibabel as nib
+import sys                                                                                                                                                                                               
+sys.path.append('/home/users/tperciano/Software/libsvm-3.23/python/') 
+import brisque.brisque
+
+brisq = brisque.BRISQUE()
 
 ########## AVERAGE START  ###############
 
@@ -30,6 +35,7 @@ for template in templates_average:
     valid = 0
     for i in range(z):
         img_slice = template[:,:,i]
+        #img_slice = (img_slice - img_slice.min())/(img_slice.max() - img_slice.min())
         value = brisq.get_score(img_slice)
         if not np.isnan(value):
             average = average + value
@@ -53,6 +59,7 @@ for template in templates_ref:
     valid = 0
     for i in range(z):
         img_slice = template[:,:,i]
+        #img_slice = (img_slice - img_slice.min())/(img_slice.max() - img_slice.min())
         value = brisq.get_score(img_slice)
         if not np.isnan(value):
             average = average + value

@@ -87,6 +87,19 @@ def build_segmentation_arg_parser():
     return parser
 
 
+def build_label_geometry_measures_arg_parser():
+    parser = ArgumentParser(usage="%(prog)s [options]")
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    return parser
+
+
+def build_image_intensify_stat_jac_arg_parser():
+    parser = ArgumentParser(usage="%(prog)s [options]")
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
+    return parser
+
+
 def init_dicom2nifti_settings():
     import dicom2nifti.settings as settings
 

@@ -1,9 +1,8 @@
 import os
-import dicom2nifti
-
 from glob import glob
 
-#from tbi import utils
+import dicom2nifti
+
 from . import utils
 
 if __name__ == '__main__':

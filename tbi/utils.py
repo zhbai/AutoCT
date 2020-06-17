@@ -5,9 +5,9 @@ import os
 from argparse import ArgumentParser
 
 
-def init_logger(name,setup=False):
+def init_logger(name, setup=False):
     if setup:
-       setup_logging()
+        setup_logging()
 
     return logging.getLogger(name)
 
@@ -64,14 +64,28 @@ def build_pre_processing_arg_parser():
     return parser
 
 
-pathin = '/home/users/tperciano/Dropbox/LBL_Projects/TBI_project/ClinicalCTs/Young_M/Preprocessed/'
-pathout = '/home/users/tperciano/Dropbox/LBL_Projects/TBI_project/ClinicalCTs/Young_M/Brains/'
-
 def build_skull_strip_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
     parser.add_argument("-i", "--input", type=str, help="input path to pre processed file", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
+
+
+def build_template_command_syn_average_arg_parser():
+    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
+    parser.add_argument("-i", "--input", type=str, help="input path", required=True)
+    parser.add_argument('output', type=str, help='Output directory')
+    return parser
+
+
+def build_segmentation_arg_parser():
+    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
+    parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
+    parser.add_argument('output', type=str, help='Output directory')
+    return parser
+
 
 def init_dicom2nifti_settings():
     import dicom2nifti.settings as settings
@@ -83,3 +97,7 @@ def init_dicom2nifti_settings():
     settings.set_resample_spline_interpolation_order(1)
     settings.set_resample_padding(-1000)
 
+
+def locate_script(python_path, script_name):
+    dir_path = os.path.dirname(os.path.realpath(python_path))
+    return os.path.join(dir_path, script_name)

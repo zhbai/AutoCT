@@ -4,7 +4,8 @@ from glob import glob
 
 from . import utils
 
-if __name__ == '__main__':
+
+def main():
     logger = utils.init_logger('tbi.segmentation', True)
     parser = utils.build_segmentation_arg_parser()
     args = parser.parse_args()
@@ -66,3 +67,7 @@ if __name__ == '__main__':
                 atlas, outputSeg, outputAffine, transforms))
         end = time.time()
         logger.info("Affine: {0}".format(end - start))
+
+
+if __name__ == '__main__':
+    main()

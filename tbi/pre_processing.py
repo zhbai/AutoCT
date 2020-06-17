@@ -3,7 +3,8 @@ import tempfile
 
 from . import utils 
 
-if __name__ == '__main__':
+
+def main():
     logger = utils.init_logger('tbi.pre_processing', True)
     parser = utils.build_pre_processing_arg_parser()
     args = parser.parse_args()
@@ -36,3 +37,7 @@ if __name__ == '__main__':
             'antsRegistrationSyN.sh -d 3 -n 40 -f {0} -m {1} -o {2}_normalized -t a'.format(args.mni_file,
                                                                                             out3file,
                                                                                             output))
+
+
+if __name__ == '__main__':
+    main()

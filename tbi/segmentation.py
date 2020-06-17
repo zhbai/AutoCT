@@ -1,10 +1,8 @@
 import os
 import time
 from glob import glob
-import sys
 
 from . import utils
-
 
 if __name__ == '__main__':
     logger = utils.init_logger('tbi.segmentation', True)
@@ -25,50 +23,46 @@ if __name__ == '__main__':
         os.makedirs(outputSyn, exist_ok=True)
         outputSyn = os.path.join(outputSyn, output_name + '_preprocessed_SyN')
         logger.info('Registering {0}'.format(file))
-        os.system('antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2}'.format(template,
-                                                                                      file,
-                                                                                      outputSyn))
+        os.system(
+            'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2}'.format(
+                template, file, outputSyn))
 
         # 2 stages: rigid + affine
         outputAffine = os.path.join(args.output, 'REGIS', 'Affine')
         os.makedirs(outputAffine, exist_ok=True)
         outputAffine = os.path.join(outputAffine, output_name + '_preprocessed_affine')
         os.system(
-            'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2} -t a'.format(template,
-                                                                                     file,
-                                                                                     outputAffine))
+            'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2} -t a'.format(
+                template, file, outputAffine))
+
         # 1 stage: deformable syn only
         outputAffine2Syn = os.path.join(args.output, 'REGIS', 'Affine2SyN')
         os.makedirs(outputAffine2Syn, exist_ok=True)
         outputAffine2Syn = os.path.join(outputAffine2Syn, output_name + '_preprocessed_affine2Syn')
-        file = outputAffine + 'Warped.nii.gz'
-        os.system('antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2} -t so'.format(template,
-                                                                                            file,
-                                                                                            outputAffine2Syn))
+        os.system(
+            'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2} -t so'.format(
+                template, outputAffine + 'Warped.nii.gz',  outputAffine2Syn))
 
         # SEGMENTATION OF THE ORIGINAL CT SCAN OF PATIENT
-        logger.info('Segmenting {0}'.format(file))
         start = time.time()
         outputSeg = os.path.join(args.output, 'SEG', 'PHYSCi')
         os.makedirs(outputSeg, exist_ok=True)
         outputSeg = os.path.join(outputSeg, output_name + '_segmentation_cortical_phy.nii.gz')
-
-        os.system('antsApplyTransforms -f 0 -d 3 -n GenericLabel[Linear] -i '
-                  + atlas + ' -o ' + outputSeg + ' -r '
-                  + file + ' -t [' + outputSyN
-                  + '_preprocessed_SyN0GenericAffine.mat,1] '
-                  + outputSyn + '_preprocessed_SyN1InverseWarp.nii.gz')
+        transforms = '[' + outputSyn + '0GenericAffine.mat,1] ' + outputSyn + '1InverseWarp.nii.gz'
+        os.system(
+            'antsApplyTransforms -f 0 -d 3 -n GenericLabel[Linear] -i {0} -o {1} -r {2} -t {3}'.format(
+                atlas, outputSeg, file, transforms))
         end = time.time()
         logger.info("Physical: {0}".format(end - start))
-        sys.exit(1)
 
         # SEGMENTATION OF THE AFFINE TRANSFORMED DATA
-        OutputSeg = zzz + "/SEG/AFFINE/" + output_name[:7]
-        os.system('antsApplyTransforms -f 0 -d 3 -n GenericLabel[Linear] -i '
-                  + atlas + ' -o ' + OutputSeg + '_segmentation_cortical_affine.nii.gz -r '
-                  + Output_Affine + '_preprocessed_affineWarped.nii.gz -t [' + Output_Affine2SyN
-                  + '_preprocessed_affine2SyN0GenericAffine.mat,1] ' + Output_Affine2SyN
-                  + '_preprocessed_affine2SyN1InverseWarp.nii.gz')
-
+        start = time.time()
+        outputSeg = os.path.join(args.output, 'SEG', 'AFFINE')
+        os.makedirs(outputSeg, exist_ok=True)
+        outputSeg = os.path.join(outputSeg, output_name + '_segmentation_cortical_affine.nii.gz')
+        transforms = '[' + outputAffine2Syn + '0GenericAffine.mat,1] ' + outputAffine2Syn + '1InverseWarp.nii.gz'
+        os.system(
+            'antsApplyTransforms -f 0 -d 3 -n GenericLabel[Linear] -i {0} -o  {1} -r {2}Warped.nii.gz -t {3}'.format(
+                atlas, outputSeg, outputAffine, transforms))
         end = time.time()
-        print("Affine: ", end - start)
+        logger.info("Affine: {0}".format(end - start))

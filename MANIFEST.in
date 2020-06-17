@@ -1,0 +1,2 @@
+include tbi/skull_strip.R
+include tbi/template_command_syn_average.sh

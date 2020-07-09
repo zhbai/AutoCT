@@ -11,8 +11,10 @@ def main():
     
     file_names = os.listdir(args.input)
     file_names.sort()
+    os.makedirs(args.output, exist_ok=True)
 
     for file_name in file_names:
+        logger.info('Processing file name:{0}'.format(file_name))
         file = os.path.join(args.input, file_name)
         logger.info('Processing file {0}'.format(file))
 
@@ -30,7 +32,8 @@ def main():
         os.system('robustfov -i {0} -r {1}'.format(out2file, out3file))
         os.system('N4BiasFieldCorrection -d 3 -i {0} -o {1}'.format(out3file, out3file))
 
-        output = os.path.join(args.output, file_name.split('.')[0])
+        idx = file_name.rindex('.')
+        output = os.path.join(args.output, file_name[0:idx])
         logger.info('Saving to {0}'.format(output))
 
         os.system(

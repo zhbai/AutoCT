@@ -12,6 +12,8 @@ def main():
     template = args.template_file
     atlas = args.atlas_file
 
+    os.makedirs(args.output, exist_ok=True)
+
     for file in glob(args.input):
         logger.info('Processing {0}'.format(file))
 

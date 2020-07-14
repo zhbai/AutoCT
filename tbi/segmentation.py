@@ -17,8 +17,9 @@ def main():
     for file in glob(args.input):
         logger.info('Processing {0}'.format(file))
 
-        output_name = file.split('/')[-1]
-        output_name = output_name[:7]
+        output_name = os.path.basename(file)
+        idx = output_name.rindex('_brain.nii.gz')
+        output_name = output_name[:idx]
         logger.debug('Output name: {0}'.format(output_name))
 
         # 3 stages: rigid + affine + deformable syn (default = 's')

@@ -8,9 +8,9 @@ names = list.files(pathin)
 
 for (i in names) {
     if (grepl("normalizedWarped",i)) {
-        print(paste("Input: ",i))
         input_name = file.path(pathin, i)
-        output_name = file.path(pathout, paste(unlist(strsplit(i,".",fixed=T))[1], "_brain.nii.gz", sep=""))
+        prefix = unlist(strsplit(i,"_normalizedWarped",fixed=T))[1]
+        output_name = file.path(pathout, paste(prefix, "_brain.nii.gz", sep=""))
         print(paste("Input: ", input_name))
         print(paste("Output: ",output_name))
         img = readnii(input_name)

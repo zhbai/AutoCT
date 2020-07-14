@@ -19,16 +19,15 @@ def main():
 
     for folder in folders:
         logger.debug('Folder: {0}'.format(folder))
-        #output_name = folder.split('/')[-2]+".nii"
         output_name = os.path.basename(os.path.dirname(folder)) 
         logger.debug('Output name: {0}'.format(output_name))
-        output_file = os.path.join(args.output, folder.split('/')[-2]+".nii")
-        output_file = output_file.replace(" ", "_")
+        output_file = os.path.join(args.output, output_name+".nii")
+        output_file = output_file.replace(' ', '_')
         logger.info('Saving to {0}'.format(output_file))
 
         try:
             dicom2nifti.dicom_series_to_nifti(folder, output_file, reorient_nifti=True)
-            logger.info('success')
+            logger.info('Done with {0}'.format(output_file))
         except Exception as e:
             logger.warning('exception %s' % e)
 

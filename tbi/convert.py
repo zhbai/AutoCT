@@ -5,32 +5,36 @@ import dicom2nifti
 
 from . import utils
 
-
-def main():
+def convert(argv):
     utils.init_dicom2nifti_settings()
     logger = utils.init_logger('tbi.convert', True)
     parser = utils.build_convert_arg_parser()
-    args = parser.parse_args()
-
+    args = parser.parse_args(argv)
     logger.info('Using args:{0}'.format(args))
 
     folders = glob(args.input)
+    logger.debug('Processing folders {0}'.format(folders))
     os.makedirs(args.output, exist_ok=True)
 
     for folder in folders:
-        logger.debug('Folder: {0}'.format(folder))
+        logger.info('Processing folder {0}'.format(folder))
         output_name = os.path.basename(os.path.dirname(folder)) 
-        logger.debug('Output name: {0}'.format(output_name))
         output_file = os.path.join(args.output, output_name+".nii")
         output_file = output_file.replace(' ', '_')
-        logger.info('Saving to {0}'.format(output_file))
+        logger.debug('Saving to {0}'.format(output_file))
 
         try:
             dicom2nifti.dicom_series_to_nifti(folder, output_file, reorient_nifti=True)
-            logger.info('Done with {0}'.format(output_file))
-        except Exception as e:
-            logger.warning('exception %s' % e)
+            logger.info('Saved {0}'.format(output_file))
+        except Exception as ex:
+            logger.warning('Processing {0} encountered exception {1}'.format(folder, ex))
 
+    logger.info('Exiting!')
+
+def main():
+    import sys
+
+    convert(sys.argv[1:])
 
 if __name__ == '__main__':
     main()

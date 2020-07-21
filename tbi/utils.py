@@ -13,7 +13,7 @@ def init_logger(name, setup=False):
 
 
 def _get_default_level():
-    return os.environ.get('TBI_LOG_LEVEL', logging.DEBUG)
+    return os.environ.get('TBI_LOG_LEVEL', logging.INFO)
 
 
 def setup_logging():
@@ -34,7 +34,7 @@ def setup_logging():
             'console': {
                 'level': default_level,
                 'class': 'logging.StreamHandler',
-                'formatter': 'concise',
+                'formatter': 'detailed',
             }
         },
         'loggers': {

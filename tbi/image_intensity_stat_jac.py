@@ -5,10 +5,10 @@ from subprocess import call
 from . import utils
 
 
-def main():
-    logger = utils.init_logger('tbi.image_intensify_stat_jac', True)
+def image_intensity_stat_jac(argv):
+    logger = utils.init_logger('tbi.image_intensity_stat_jac', True)
     parser = utils.build_image_intensify_stat_jac_arg_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     file_names = glob(args.input)
     logger.debug('Found files {0}'.format(file_names))
@@ -24,6 +24,12 @@ def main():
         output = os.path.join(args.output, output_name + '.txt')
         logger.info("Saving to file name: {0}".format(output))
         os.system('ImageIntensityStatistics {0} {1} {2} > {3}'.format(3, file_name, template, output))
+
+
+def main():
+    import sys
+
+    image_intensity_stat_jac(sys.argv[1:])
 
 
 if __name__ == '__main__':

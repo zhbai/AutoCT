@@ -19,8 +19,9 @@ def convert(argv):
     for folder in folders:
         logger.info('Processing folder {0}'.format(folder))
         output_name = os.path.basename(os.path.dirname(folder)) 
+        output_name = output_name.replace(' ', '_')
+        output_name = output_name.replace('.', '_')
         output_file = os.path.join(args.output, output_name+".nii")
-        output_file = output_file.replace(' ', '_')
         logger.debug('Saving to {0}'.format(output_file))
 
         try:

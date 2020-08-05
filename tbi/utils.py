@@ -73,6 +73,10 @@ def build_skull_strip_arg_parser():
 
 def build_template_command_syn_average_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
+    parser.add_argument("-l", "--iteration-limit", type=int, default=4, help="iterations of the template construction", required=False)
+    parser.add_argument("-j", "--cpu-cores", type=int, default=40, help="number of cpu cores to use", required=False)
+    parser.add_argument("-m", "--max-iterations", type=str, default="100x70x50x10", help="max-iterations in each registration", required=False)
+    parser.add_argument("-e", "--extra-args", type=str, default="-d 3 -g 0.2 -k 1 -w 1 -n 1 -r 1 -s CC -t GR -b 1", help="extra arguments", required=False)
     parser.add_argument("-i", "--input", type=str, help="input path", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser

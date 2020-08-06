@@ -22,6 +22,10 @@ def convert(argv):
         output_name = os.path.basename(os.path.dirname(folder)) 
         output_name = output_name.replace(' ', '_')
         output_name = output_name.replace('.', '_')
+
+        if args.prefix:
+           output_name = args.prefix + '_' + output_name
+
         output_file = os.path.join(args.output, output_name+".nii")
         logger.debug('Saving to {0}'.format(output_file))
 

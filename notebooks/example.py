@@ -22,6 +22,7 @@ import os
 
 
 dcmfiles = '/data/BR-1001/*/*/'
+convert_prefix = 'BR1001'
 output = '/data/out'
 mni_file = '/data/MNI152_T1_1mm_brain.nii'
 atlas_file = '/data/New_atlas_cort_asym_sub.nii.gz'
@@ -34,6 +35,8 @@ template_file = '/data/TemplateYoungM_128.nii.gz'
 convert_dir = join(output, 'convert')
 convert_args = ['-i', 
                 dcmfiles, 
+                '-p',
+                convert_prefix,
                 convert_dir
                ]
 convert(convert_args)

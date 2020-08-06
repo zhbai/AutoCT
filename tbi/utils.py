@@ -52,6 +52,7 @@ def setup_logging():
 def build_convert_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
     parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser.add_argument("-p", "--prefix", type=str, default="", help="prefix to ouput names", required=False)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 

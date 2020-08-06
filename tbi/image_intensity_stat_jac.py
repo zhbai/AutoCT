@@ -12,7 +12,7 @@ def image_intensity_stat_jac(argv):
 
     file_names = glob(args.input)
     logger.debug('Found files {0}'.format(file_names))
-    template = args.template_file
+    atlas = args.atlas_file
 
     os.makedirs(args.output, exist_ok=True)
 
@@ -23,7 +23,7 @@ def image_intensity_stat_jac(argv):
         output_name = output_name[:idx]
         output = os.path.join(args.output, output_name + '.txt')
         logger.info("Saving to file name: {0}".format(output))
-        os.system('ImageIntensityStatistics {0} {1} {2} > {3}'.format(3, file_name, template, output))
+        os.system('ImageIntensityStatistics {0} {1} {2} > {3}'.format(3, file_name, atlas, output))
 
 
 def main():

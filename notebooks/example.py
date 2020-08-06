@@ -147,7 +147,7 @@ image_intensity_stat_jac_dir = join(output, 'image_intensity_stat_jac')
 
 image_intensity_stat_jac_args = ['-i', 
                                  join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'), 
-                                 '-t',
+                                 '-a',
                                  atlas_file,
                                  image_intensity_stat_jac_dir
                                 ]

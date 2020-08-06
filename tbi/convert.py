@@ -5,6 +5,7 @@ import dicom2nifti
 
 from . import utils
 
+
 def convert(argv):
     utils.init_dicom2nifti_settings()
     logger = utils.init_logger('tbi.convert', True)
@@ -32,10 +33,12 @@ def convert(argv):
 
     logger.info('Exiting!')
 
+
 def main():
     import sys
 
     convert(sys.argv[1:])
+
 
 if __name__ == '__main__':
     main()

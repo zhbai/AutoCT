@@ -101,7 +101,7 @@ def build_label_geometry_measures_arg_parser():
 def build_image_intensify_stat_jac_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
     parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
-    parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
+    parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 

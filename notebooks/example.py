@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[80]:
+# In[1]:
 
 
 from tbi.convert import convert
@@ -18,7 +18,7 @@ from os.path import join
 import os
 
 
-# In[67]:
+# In[2]:
 
 
 dcmfiles = '/data/BR-1001/*/*/'
@@ -28,15 +28,18 @@ atlas_file = '/data/New_atlas_cort_asym_sub.nii.gz'
 template_file = '/data/TemplateYoungM_128.nii.gz'
 
 
-# In[ ]:
+# In[3]:
 
 
 convert_dir = join(output, 'convert')
-convert_args = ['-i', dcmfiles, convert_dir]
+convert_args = ['-i', 
+                dcmfiles, 
+                convert_dir
+               ]
 convert(convert_args)
 
 
-# In[65]:
+# In[4]:
 
 
 nii_files = os.listdir(convert_dir)
@@ -46,35 +49,43 @@ for nii_file in nii_files:
     plot_img(join(convert_dir, nii_file))
 
 
-# In[56]:
+# In[5]:
 
 
 preprocessing_dir = join(output, 'preprocessing')
-preprocessing_args = ['-i', convert_dir, '-m', mni_file, preprocessing_dir]
+preprocessing_args = ['-i', 
+                      join(convert_dir, '*.nii'), 
+                      '-m', 
+                      mni_file, 
+                      preprocessing_dir
+                     ]
 preprocessing(preprocessing_args)
 
 
-# In[63]:
+# In[6]:
 
 
 nii_files = os.listdir(preprocessing_dir)
 
 for nii_file in nii_files:
-    if nii_file.endswith("nii.gz"):
+    if nii_file.endswith(".nii.gz"):
         print('Plotting {0}'.format(nii_file))
         plot_img(join(preprocessing_dir, nii_file))
         
 
 
-# In[57]:
+# In[7]:
 
 
 skull_strip_dir = join(output, 'skull_strip')
-skull_strip_args = ['-i', preprocessing_dir, skull_strip_dir]
+skull_strip_args = ['-i', 
+                    join(preprocessing_dir, '*_normalizedWarped.nii.gz'),
+                    skull_strip_dir
+                   ]
 skull_strip(skull_strip_args)
 
 
-# In[78]:
+# In[8]:
 
 
 nii_files = os.listdir(skull_strip_dir)
@@ -84,16 +95,22 @@ for nii_file in nii_files:
     plot_img(join(skull_strip_dir, nii_file))
 
 
-# In[68]:
+# In[9]:
 
 
 skulls = join(skull_strip_dir, '*_brain.nii.gz')
 segmentation_dir = join(output, 'segmentation')
-segmentation_args = ['-i', skulls, '-t', template_file, '-a', atlas_file, segmentation_dir]
+segmentation_args = ['-i', 
+                     skulls, 
+                     '-t', template_file, 
+                     '-a', 
+                     atlas_file, 
+                     segmentation_dir
+                    ]
 segmentation(segmentation_args)
 
 
-# In[89]:
+# In[10]:
 
 
 nii_files = glob(join(segmentation_dir, 'SEG/*/*.nii.gz'))
@@ -102,16 +119,17 @@ for nii_file in nii_files:
     plot_img(nii_file)
 
 
-# In[ ]:
+# In[11]:
 
 
 nii_files = glob(join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'))
 for nii_file in nii_files:
     print(nii_file)
-    plot_img(nii_file)
+    #Need to figure out how to plot this 5 dimension image
+    #plot_img(nii_file)
 
 
-# In[85]:
+# In[12]:
 
 
 label_geometry_measures_dir = join(output, 'label_geometry_measures')
@@ -122,7 +140,7 @@ label_geometry_measures_args = ['-i',
 label_geometry_measures(label_geometry_measures_args)
 
 
-# In[91]:
+# In[13]:
 
 
 image_intensity_stat_jac_dir = join(output, 'image_intensity_stat_jac')
@@ -135,10 +153,4 @@ image_intensity_stat_jac_args = ['-i',
                                 ]
 
 image_intensity_stat_jac(image_intensity_stat_jac_args)
-
-
-# In[ ]:
-
-
-
 

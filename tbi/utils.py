@@ -58,7 +58,7 @@ def build_convert_arg_parser():
 
 def build_pre_processing_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path", required=True)
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
     parser.add_argument("-m", "--mni-file", type=str, help="mni file", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
@@ -66,7 +66,7 @@ def build_pre_processing_arg_parser():
 
 def build_skull_strip_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path to pre processed file", required=True)
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 

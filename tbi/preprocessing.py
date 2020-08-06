@@ -1,6 +1,8 @@
 import os
 import tempfile
 
+from glob import glob
+
 from . import utils 
 
 
@@ -10,13 +12,12 @@ def preprocessing(argv):
     args = parser.parse_args(argv)
     logger.info('Using args:{0}'.format(args))
     
-    file_names = os.listdir(args.input)
+    file_names = glob(args.input)
     file_names.sort()
     logger.debug('Processing files {0}'.format(file_names))
     os.makedirs(args.output, exist_ok=True)
 
-    for file_name in file_names:
-        file = os.path.join(args.input, file_name)
+    for file in file_names:
         logger.info('Processing file {0}'.format(file))
 
         temp = tempfile.TemporaryDirectory()
@@ -33,6 +34,8 @@ def preprocessing(argv):
         os.system('robustfov -i {0} -r {1}'.format(out2file, out3file))
         os.system('N4BiasFieldCorrection -d 3 -i {0} -o {1}'.format(out3file, out3file))
 
+        file_name = os.path.basename(file)
+        logger.debug('Processing file_name {0}'.format(file_name))
         idx = file_name.rindex('.')
         output = os.path.join(args.output, file_name[0:idx])
         logger.debug('Saving to {0}'.format(output))

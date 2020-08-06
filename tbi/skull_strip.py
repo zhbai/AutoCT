@@ -1,5 +1,7 @@
 import os
 
+from glob import glob
+
 from . import utils
 
 
@@ -12,7 +14,17 @@ def skull_strip(argv):
     script = utils.locate_script(__file__, 'skull_strip.R')
     logger.debug('Using R script at {0}'.format(script))
     os.makedirs(args.output, exist_ok=True)
-    os.system('Rscript {0} {1} {2}'.format(script, args.input, args.output))
+
+    files = glob(args.input)
+    files.sort()
+
+    logger.debug('Processing files {0}'.format(files))
+    os.makedirs(args.output, exist_ok=True)
+
+    for file in files:
+       logger.info('Processing file {0}'.format(file))
+       os.system('Rscript {0} {1} {2}'.format(script, file, args.output))
+
     logger.info('Exiting!')
 
 

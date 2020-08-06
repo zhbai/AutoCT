@@ -13,7 +13,7 @@ def init_logger(name, setup=False):
 
 
 def _get_default_level():
-    return os.environ.get('TBI_LOG_LEVEL', logging.DEBUG)
+    return os.environ.get('TBI_LOG_LEVEL', logging.INFO)
 
 
 def setup_logging():
@@ -34,7 +34,7 @@ def setup_logging():
             'console': {
                 'level': default_level,
                 'class': 'logging.StreamHandler',
-                'formatter': 'concise',
+                'formatter': 'detailed',
             }
         },
         'loggers': {
@@ -52,13 +52,14 @@ def setup_logging():
 def build_convert_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
     parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser.add_argument("-p", "--prefix", type=str, default="", help="prefix to ouput names", required=False)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 
 
 def build_pre_processing_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path", required=True)
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
     parser.add_argument("-m", "--mni-file", type=str, help="mni file", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
@@ -66,13 +67,17 @@ def build_pre_processing_arg_parser():
 
 def build_skull_strip_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path to pre processed file", required=True)
+    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 
 
 def build_template_command_syn_average_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
+    parser.add_argument("-l", "--iteration-limit", type=int, default=4, help="iterations of the template construction", required=False)
+    parser.add_argument("-j", "--cpu-cores", type=int, default=40, help="number of cpu cores to use", required=False)
+    parser.add_argument("-m", "--max-iterations", type=str, default="100x70x50x10", help="max-iterations in each registration", required=False)
+    parser.add_argument("-e", "--extra-args", type=str, default="-d 3 -g 0.2 -k 1 -w 1 -n 1 -r 1 -s CC -t GR -b 1", help="extra arguments", required=False)
     parser.add_argument("-i", "--input", type=str, help="input path", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
@@ -88,15 +93,17 @@ def build_segmentation_arg_parser():
 
 
 def build_label_geometry_measures_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options]")
+    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
     parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser.add_argument('output', type=str, help='Output directory')
     return parser
 
 
 def build_image_intensify_stat_jac_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options]")
+    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
     parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
-    parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
+    parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
+    parser.add_argument('output', type=str, help='Output directory')
     return parser
 
 

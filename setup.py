@@ -10,16 +10,17 @@ setup(
     description='Description of my package',
     packages=find_packages(),    
     install_requires=[
-       'dicom2nifti==2.0.9'
+       'dicom2nifti==2.0.9', 'nilearn==0.6.2', 'pytest==6.0.1', 'matplotlib==3.0.3'
+       
     ],
     entry_points={
        'console_scripts': [
               'tbi-convert = tbi.convert:main',
-              'tbi-pre-processing = tbi.pre_processing:main',
+              'tbi-preprocessing = tbi.preprocessing:main',
               'tbi-skull-strip = tbi.skull_strip:main',
               'tbi-template-command-syn-average = tbi.template_command_syn_average:main',
               'tbi-segmentation = tbi.segmentation:main',
-              'tbi-image-intensify-stat-jac = tbi.image_intensify_stat_jac:main',
+              'tbi-image-intensity-stat-jac = tbi.image_intensity_stat_jac:main',
               'tbi-label-geometry-measures = tbi.label_geometry_measures:main'
        ]
     },

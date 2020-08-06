@@ -5,18 +5,23 @@ from glob import glob
 from . import utils
 
 
-def main():
+def segmentation(argv):
     logger = utils.init_logger('tbi.segmentation', True)
     parser = utils.build_segmentation_arg_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    logger.info('Arguments: {0}'.format(args))
+
     template = args.template_file
     atlas = args.atlas_file
+
+    os.makedirs(args.output, exist_ok=True)
 
     for file in glob(args.input):
         logger.info('Processing {0}'.format(file))
 
-        output_name = file.split('/')[-1]
-        output_name = output_name[:7]
+        output_name = os.path.basename(file)
+        idx = output_name.rindex('_brain.nii.gz')
+        output_name = output_name[:idx]
         logger.debug('Output name: {0}'.format(output_name))
 
         # 3 stages: rigid + affine + deformable syn (default = 's')
@@ -67,6 +72,14 @@ def main():
                 atlas, outputSeg, outputAffine, transforms))
         end = time.time()
         logger.info("Affine: {0}".format(end - start))
+
+    logger.info('Exiting!')
+
+
+def main():
+    import sys
+
+    segmentation(sys.argv[1:])
 
 
 if __name__ == '__main__':

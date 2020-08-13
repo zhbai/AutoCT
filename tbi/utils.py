@@ -72,12 +72,15 @@ def build_skull_strip_arg_parser():
     return parser
 
 
+def default_template_extra_args():
+    defaults = '-d 3 -i 4 -g 0.2 -j 40 -c 2 -k 1 -w 1 -m 100x70x50x10 -n 1 -r 1 -s CC -t GR -b 1'
+    return os.environ.get('DEFAULT_TEMPLATE_EXTRA_ARGS',  defaults)
+
+
 def build_template_command_syn_average_arg_parser():
     parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-l", "--iteration-limit", type=int, default=4, help="iterations of the template construction", required=False)
-    parser.add_argument("-j", "--cpu-cores", type=int, default=40, help="number of cpu cores to use", required=False)
-    parser.add_argument("-m", "--max-iterations", type=str, default="100x70x50x10", help="max-iterations in each registration", required=False)
-    parser.add_argument("-e", "--extra-args", type=str, default="-d 3 -g 0.2 -k 1 -w 1 -n 1 -r 1 -s CC -t GR -b 1", help="extra arguments", required=False)
+    parser.add_argument("-e", "--extra-args", type=str, default=default_template_extra_args(),
+                        help="extra arguments", required=False)
     parser.add_argument("-i", "--input", type=str, help="input path", required=True)
     parser.add_argument('output', type=str, help='Output directory')
     return parser
@@ -121,3 +124,21 @@ def init_dicom2nifti_settings():
 def locate_script(python_path, script_name):
     dir_path = os.path.dirname(os.path.realpath(python_path))
     return os.path.join(dir_path, script_name)
+
+
+def replace(src_args, dst_args):
+    def to_dictionary(str_args):
+        temp = str_args.split()
+
+        return dict(zip(list(filter(lambda x: x.startswith('-'), temp)),
+                        list(filter(lambda x: not x.startswith('-'), temp))))
+
+    dst_dict = to_dictionary(dst_args)
+    dst_dict.update(to_dictionary(src_args))
+
+    def to_string(d):
+        import json
+
+        return json.dumps(d).replace('{', '').replace(',', '').replace(':', '').replace('"', '').replace('}', '')
+
+    return to_string(dst_dict)

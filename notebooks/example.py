@@ -33,10 +33,9 @@ template_file = '/data/TemplateYoungM_128.nii.gz'
 
 
 convert_dir = join(output, 'convert')
-convert_args = ['-i', 
-                dcmfiles, 
-                '-p',
+convert_args = ['-p',
                 convert_prefix,
+                dcmfiles, 
                 convert_dir
                ]
 convert(convert_args)
@@ -56,10 +55,9 @@ for nii_file in nii_files:
 
 
 preprocessing_dir = join(output, 'preprocessing')
-preprocessing_args = ['-i', 
-                      join(convert_dir, '*.nii'), 
-                      '-m', 
+preprocessing_args = ['-m', 
                       mni_file, 
+                      join(convert_dir, '*.nii'), 
                       preprocessing_dir
                      ]
 preprocessing(preprocessing_args)
@@ -81,8 +79,7 @@ for nii_file in nii_files:
 
 
 skull_strip_dir = join(output, 'skull_strip')
-skull_strip_args = ['-i', 
-                    join(preprocessing_dir, '*_normalizedWarped.nii.gz'),
+skull_strip_args = [join(preprocessing_dir, '*_normalizedWarped.nii.gz'),
                     skull_strip_dir
                    ]
 skull_strip(skull_strip_args)
@@ -103,11 +100,11 @@ for nii_file in nii_files:
 
 skulls = join(skull_strip_dir, '*_brain.nii.gz')
 segmentation_dir = join(output, 'segmentation')
-segmentation_args = ['-i', 
-                     skulls, 
-                     '-t', template_file, 
+segmentation_args = ['-t', 
+                     template_file, 
                      '-a', 
                      atlas_file, 
+                     skulls, 
                      segmentation_dir
                     ]
 segmentation(segmentation_args)
@@ -136,8 +133,7 @@ for nii_file in nii_files:
 
 
 label_geometry_measures_dir = join(output, 'label_geometry_measures')
-label_geometry_measures_args = ['-i', 
-                                join(segmentation_dir, 'SEG/*/*.nii.gz'),
+label_geometry_measures_args = [join(segmentation_dir, 'SEG/*/*.nii.gz'),
                                 label_geometry_measures_dir
                                ]
 label_geometry_measures(label_geometry_measures_args)
@@ -148,12 +144,17 @@ label_geometry_measures(label_geometry_measures_args)
 
 image_intensity_stat_jac_dir = join(output, 'image_intensity_stat_jac')
 
-image_intensity_stat_jac_args = ['-i', 
-                                 join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'), 
-                                 '-a',
+image_intensity_stat_jac_args = ['-a',
                                  atlas_file,
+                                 join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'), 
                                  image_intensity_stat_jac_dir
                                 ]
 
 image_intensity_stat_jac(image_intensity_stat_jac_args)
+
+
+# In[ ]:
+
+
+
 

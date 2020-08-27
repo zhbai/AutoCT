@@ -1,17 +1,10 @@
-import os
-
 from . import utils
 
 logger = utils.init_logger('tbi.fsl', False)
 
 
-def execute(cmd):
-    logger.info(cmd)
-    os.system(cmd)
-
-
 def fsl_maths(file, outfile, opts):
-    execute('fslmaths {0} {1} {2}'.format(file, opts, outfile))
+    utils.execute('fslmaths {0} {1} {2}'.format(file, opts, outfile))
     return outfile
 
 
@@ -39,7 +32,7 @@ def fsl_mask(file, outfile, mask):
 
 
 def fsl_bet2(file, outfile, opts='-f 0.01 -v'):
-    execute('bet2 {0} {1} {2}'.format(file, outfile, opts))
+    utils.execute('bet2 {0} {1} {2}'.format(file, outfile, opts))
     return outfile
 
 

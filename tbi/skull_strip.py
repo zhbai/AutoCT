@@ -23,9 +23,9 @@ def skull_strip(argv):
 
     for file in files:
        logger.info('Processing file {0}'.format(file))
-       os.system('Rscript {0} {1} {2} {3} {4}'.format(script, file, args.output, args.strip, args.append))
+       utils.execute('Rscript {0} {1} {2} {3} {4}'.format(script, file, args.output, args.strip, args.append))
 
-    logger.info('Exiting!')
+    logger.info('Done')
 
 
 def main():

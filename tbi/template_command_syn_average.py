@@ -18,6 +18,7 @@ def syn_average(argv):
     template_args = utils.replace(args.extra_args, utils.default_template_extra_args())
     template_args = template_args + ' -o {0}/T_ {1}'.format(args.output, args.input)
     utils.execute('{0} {1}'.format(cmd, template_args))
+    logger.info('Done')
 
 
 def main():

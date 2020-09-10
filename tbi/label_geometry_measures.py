@@ -1,6 +1,5 @@
 import os
 from glob import glob
-from subprocess import call
 
 from . import utils
 
@@ -21,7 +20,9 @@ def label_geometry_measures(argv):
         output_name = output_name[:idx]
         output = os.path.join(args.output, output_name + '.txt')
         logger.info("Saving to file name: {0}".format(output))
-        os.system('LabelGeometryMeasures {0} {1} > {2}'.format(3, file_name, output))
+        utils.execute('LabelGeometryMeasures {0} {1} > {2}'.format(3, file_name, output))
+
+    logger.info('Done')
 
 
 def main():

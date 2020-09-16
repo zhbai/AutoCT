@@ -4,6 +4,10 @@ import os
 
 logger = logging.getLogger('tbi.utils')
 
+def use_r():
+    return os.environ.get('USE_R', 'false').lower() == 'true'
+
+
 def init_logger(name, setup=False):
     if setup:
         setup_logging()

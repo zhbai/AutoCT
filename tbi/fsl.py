@@ -1,6 +1,6 @@
-from . import utils
+import nibabel as nib
 
-logger = utils.init_logger('tbi.fsl', False)
+from . import utils
 
 
 def fsl_maths(file, outfile, opts):
@@ -36,20 +36,17 @@ def fsl_bet2(file, outfile, opts='-f 0.01 -v'):
     return outfile
 
 
-def skull_strip(input_file, output_file):
-    import tempfile
+def fsl_skull_strip(input_file, temp_dir_name):
     import os
 
-    temp_dir = tempfile.TemporaryDirectory()
-
     # Threshold image to 0-100
-    threshold_file = os.path.join(temp_dir.name, 'threshold.nii.gz')
+    threshold_file = os.path.join(temp_dir_name, 'threshold.nii.gz')
     fsl_threshold(input_file, threshold_file)
 
     # Creating binary mask to re-mask after filling
-    mask_file = os.path.join(temp_dir.name, 'mask1.nii.gz')
+    mask_file = os.path.join(temp_dir_name, 'mask1.nii.gz')
     fsl_fill(
-        fsl_abs(threshold_file, os.path.join(temp_dir.name, 'abs1.nii.gz')),
+        fsl_abs(threshold_file, os.path.join(temp_dir_name, 'abs1.nii.gz')),
         mask_file)
 
     # Pre-smooth image and re-mask it
@@ -62,10 +59,11 @@ def skull_strip(input_file, output_file):
         temp_output_file)
 
     # Using fsl_fill to fill in any holes in mask
-    mask_file = os.path.join(temp_dir.name, 'mask2.nii.gz')
+    mask_file = os.path.join(temp_dir_name, 'mask2.nii.gz')
     fsl_fill(
-        fsl_abs(temp_output_file, os.path.join(temp_dir.name, 'abs2.nii.gz')),
+        fsl_abs(temp_output_file, os.path.join(temp_dir_name, 'abs2.nii.gz')),
         mask_file)
 
     # Using the filled mask to mask original image
-    fsl_mask(input_file, output_file, mask_file)
+    fsl_mask(input_file, os.path.join(temp_dir_name, 'last.nii.gz'), mask_file)
+    return nib.load(os.path.join(temp_dir_name, 'last.nii.gz'))

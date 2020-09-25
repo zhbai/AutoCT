@@ -4,6 +4,7 @@ import os
 
 logger = logging.getLogger('tbi.utils')
 
+
 def use_r():
     return os.environ.get('USE_R', 'false').lower() == 'true'
 

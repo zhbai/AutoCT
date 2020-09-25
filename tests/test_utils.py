@@ -14,7 +14,7 @@ def test_execute():
 
 def test_bad_execute():
     try:
-        utils.execute('somecommand')
+        utils.execute('bad_test_ommand')
         assert False
-    except Exception as ex:
+    except Exception:
         pass

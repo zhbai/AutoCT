@@ -20,7 +20,8 @@ def segmentation(argv):
         logger.info('Processing {0}'.format(file))
 
         output_name = os.path.basename(file)
-        idx = output_name.rindex('_brain.nii.gz')
+        #idx = output_name.rindex('_brain.nii.gz')
+        idx = output_name.rindex('_brain.nii')
         output_name = output_name[:idx]
         logger.debug('Output name: {0}'.format(output_name))
 

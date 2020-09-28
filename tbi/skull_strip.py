@@ -1,13 +1,11 @@
 import os
 from glob import glob
 
-import nibabel as nib
-
 from . import utils
 
-nii_extension = '.nii.gz'
 
 def skull_strip_using_py(argv):
+    import nibabel as nib
     from .fsl import fsl_skull_strip
     from .image_utils import rescale_img, calibrate_img, drop_img_dim
     import tempfile
@@ -40,7 +38,7 @@ def skull_strip_using_py(argv):
         nib.save(img, temp_file)
         idx = file_name.index(args.strip)
         output = os.path.join(args.output,
-                              file_name[0:idx] + args.append + nii_extension)
+                              file_name[0:idx] + args.append + '.nii.gz')
         img = fsl_skull_strip(temp_file, temp_dir.name)
         img = drop_img_dim(img)
         calibrate_img(img)

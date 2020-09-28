@@ -11,8 +11,8 @@ def fix_pixdim(pixdim, ndim):
 
 def drop_img_dim(img, only_last=True):
     header = img.header
-    dim_ = header['dim']
-    pdim = header['pixdim']
+    dim_ = header['dim'].copy()
+    pdim = header['pixdim'].copy()
     fix_pixdim(pdim, dim_[0])
     imgdim = img.shape
     ndim = img.ndim + 1
@@ -36,6 +36,10 @@ def drop_img_dim(img, only_last=True):
     pdim = np.concatenate([pdim, np.ones(8 - len(pdim))])
     dim_ = dim_[no_data == False]
     dim_ = np.concatenate([dim_, np.ones(8 - len(dim_))])
+
+    if len(imgdim) > ndim:
+       header = header.copy()
+
     header['pixdim'] = pdim
     header['dim'] = dim_
 
@@ -53,6 +57,9 @@ def drop_img_dim(img, only_last=True):
     else:
          data = np.squeeze(data)
 
+    checkdim = header['dim']
+    checkdim[checkdim < 1] = 1
+    header['dim'] = checkdim 
     return img.__class__(data, affine=img.affine, header=header)
 
 def calibrate_img(img):

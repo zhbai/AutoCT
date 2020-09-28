@@ -24,29 +24,30 @@ def preprocessing(argv):
         logger.debug('Using temporary directory {0}'.format(temp))
 
         out1file = os.path.join(temp.name, 'out1.nii.gz')
-        os.system('fslswapdim {0} x -y z {1}'.format(file, out1file))
+        utils.execute('fslswapdim {0} x -y z {1}'.format(file, out1file))
 
         out2file = os.path.join(temp.name, 'out2.nii.gz')
-        os.system('3dresample -dxyz 1.0 1.0 1.0 -orient RPI -prefix {0} -inset {1}'.format(out2file,
-                                                                                           out1file))
+        utils.execute('3dresample -dxyz 1.0 1.0 1.0 -orient RPI -prefix {0} -inset {1}'.format(out2file,
+                                                                                               out1file))
 
         out3file = os.path.join(temp.name, 'out3.nii.gz')
-        os.system('robustfov -i {0} -r {1}'.format(out2file, out3file))
-        os.system('N4BiasFieldCorrection -d 3 -i {0} -o {1}'.format(out3file, out3file))
+        utils.execute('robustfov -i {0} -r {1}'.format(out2file, out3file))
+        utils.execute('N4BiasFieldCorrection -d 3 -i {0} -o {1}'.format(out3file, out3file))
 
         file_name = os.path.basename(file)
         logger.debug('Processing file_name {0}'.format(file_name))
-        idx = file_name.rindex('.')
+        idx = file_name.index('.')
         output = os.path.join(args.output, file_name[0:idx])
         logger.debug('Saving to {0}'.format(output))
 
-        os.system(
+        utils.execute(
             'antsRegistrationSyN.sh -d 3 -n 3 -f {0} -m {1} -o {2}_normalized -t a'.format(args.mni_file,
-                                                                                            out3file,
-                                                                                            output))
+                                                                                           out3file,
+                                                                                           output))
         logger.info('Saved {0}'.format(output))
 
-    logger.info('Exiting!')
+    logger.info('Done')
+
 
 def main():
     import sys

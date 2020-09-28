@@ -1,149 +1,133 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[16]:
 
 
-from tbi.convert import convert
-from tbi.preprocessing import preprocessing
-from tbi.skull_strip import skull_strip
 from tbi.segmentation import segmentation
 from tbi.label_geometry_measures import label_geometry_measures
 from tbi.image_intensity_stat_jac import image_intensity_stat_jac
+from tbi.skull_strip import skull_strip
+from tbi.preprocessing import preprocessing
 
 from glob import glob
 from nilearn.plotting import plot_img
+import nilearn.plotting as plotting
+import pandas as pd
 from os.path import join
-
-import os
-
-
-# In[2]:
+from IPython.display import display
 
 
-dcmfiles = '/data/BR-1001/*/*/'
-convert_prefix = 'BR1001'
-output = '/data/out'
-mni_file = '/data/MNI152_T1_1mm_brain.nii'
-atlas_file = '/data/New_atlas_cort_asym_sub.nii.gz'
-template_file = '/data/TemplateYoungM_128.nii.gz'
+# In[17]:
 
 
-# In[3]:
+output = '/data/illustration/py-out3'
+mni_file = 'illustration_data/MNI152_T1_1mm_brain.nii'
+atlas_file = 'illustration_data/New_atlas_cort_asym_sub.nii.gz'
+template_file = 'illustration_data/T_template0.nii.gz'
+convert_dir = 'illustration_data/convert'
 
 
-convert_dir = join(output, 'convert')
-convert_args = ['-p',
-                convert_prefix,
-                dcmfiles, 
-                convert_dir
-               ]
-convert(convert_args)
-
-
-# In[4]:
-
-
-nii_files = os.listdir(convert_dir)
-
-for nii_file in nii_files:
-    print('Plotting {0}'.format(nii_file))
-    plot_img(join(convert_dir, nii_file))
-
-
-# In[5]:
+# In[18]:
 
 
 preprocessing_dir = join(output, 'preprocessing')
 preprocessing_args = ['-m', 
                       mni_file, 
-                      join(convert_dir, '*.nii'), 
+                      join(convert_dir, '*.nii.gz'), 
                       preprocessing_dir
                      ]
 preprocessing(preprocessing_args)
 
 
-# In[6]:
+# In[19]:
 
 
-nii_files = os.listdir(preprocessing_dir)
+nii_files = glob(join(preprocessing_dir, "*.nii.gz"))
 
 for nii_file in nii_files:
-    if nii_file.endswith(".nii.gz"):
-        print('Plotting {0}'.format(nii_file))
-        plot_img(join(preprocessing_dir, nii_file))
-        
+    print('Plotting {0}'.format(nii_file))
+    plot_img(nii_file)
+    plotting.show()
 
 
-# In[7]:
+# In[20]:
 
 
-skull_strip_dir = join(output, 'skull_strip')
+skull_strip_dir = join(output, 'brains')
 skull_strip_args = [join(preprocessing_dir, '*_normalizedWarped.nii.gz'),
                     skull_strip_dir
                    ]
 skull_strip(skull_strip_args)
 
 
-# In[8]:
+# In[21]:
 
 
-nii_files = os.listdir(skull_strip_dir)
+nii_files = glob(join(skull_strip_dir, "*.nii.gz"))
 
 for nii_file in nii_files:
     print('Plotting {0}'.format(nii_file))
-    plot_img(join(skull_strip_dir, nii_file))
+    plot_img(nii_file)
+    plotting.show()
 
 
-# In[9]:
+# In[22]:
 
 
-skulls = join(skull_strip_dir, '*_brain.nii.gz')
+brains = join(skull_strip_dir, '*.nii.gz')
 segmentation_dir = join(output, 'segmentation')
 segmentation_args = ['-t', 
                      template_file, 
                      '-a', 
                      atlas_file, 
-                     skulls, 
+                     brains, 
                      segmentation_dir
                     ]
+
 segmentation(segmentation_args)
 
 
-# In[10]:
+# In[23]:
 
 
 nii_files = glob(join(segmentation_dir, 'SEG/*/*.nii.gz'))
 for nii_file in nii_files:
     print(nii_file)
     plot_img(nii_file)
+    plotting.show()
 
 
-# In[11]:
-
-
-nii_files = glob(join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'))
-for nii_file in nii_files:
-    print(nii_file)
-    #Need to figure out how to plot this 5 dimension image
-    #plot_img(nii_file)
-
-
-# In[12]:
+# In[24]:
 
 
 label_geometry_measures_dir = join(output, 'label_geometry_measures')
 label_geometry_measures_args = [join(segmentation_dir, 'SEG/*/*.nii.gz'),
                                 label_geometry_measures_dir
                                ]
+
 label_geometry_measures(label_geometry_measures_args)
 
 
-# In[13]:
+# In[25]:
+
+
+txt_files = glob(join(label_geometry_measures_dir, "*.txt"))
+names='Label,Volume(voxels),SurfArea(mm^2), Eccentricity, Elongation, Orientation,Centroid, Axes Length, Bounding Box'
+
+for txt_file in txt_files:
+    print('Displaying {0}'.format(txt_file))
+    df = pd.read_csv(txt_file, 
+        sep=r' {2,}', 
+        engine='python', 
+        index_col=0, skiprows=[0], header=None, names=names.split(','))
+    display(df)
+
+
+# In[26]:
 
 
 image_intensity_stat_jac_dir = join(output, 'image_intensity_stat_jac')
-
 image_intensity_stat_jac_args = ['-a',
                                  atlas_file,
                                  join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'), 
@@ -151,6 +135,18 @@ image_intensity_stat_jac_args = ['-a',
                                 ]
 
 image_intensity_stat_jac(image_intensity_stat_jac_args)
+
+
+# In[27]:
+
+
+txt_files = glob(join(image_intensity_stat_jac_dir, "*.txt"))
+names='Label,Volume(voxels),SurfArea(mm^2), Eccentricity, Elongation, Orientation,Centroid, Axes Length, Bounding Box'
+
+for txt_file in txt_files:
+    print('Displaying {0}'.format(txt_file))
+    df = pd.read_csv(txt_file, sep=' +', engine='python', index_col=0)
+    display(df)
 
 
 # In[ ]:

@@ -2,7 +2,11 @@ import logging
 import logging.config
 import os
 
-from argparse import ArgumentParser
+logger = logging.getLogger('tbi.utils')
+
+
+def use_r():
+    return os.environ.get('USE_R', 'false').lower() == 'true'
 
 
 def init_logger(name, setup=False):
@@ -49,25 +53,35 @@ def setup_logging():
     logging.config.dictConfig(config_dict)
 
 
+def crate_parser(usage="%(prog)s [options] input_glob_expression output_directory"):
+    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+    return ArgumentParser(usage=usage, formatter_class=ArgumentDefaultsHelpFormatter)
+
+
 def build_convert_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
-    parser.add_argument("-p", "--prefix", type=str, default="", help="prefix to ouput names", required=False)
-    parser.add_argument('output', type=str, help='Output directory')
+    parser = crate_parser()
+    parser.add_argument("-p", "--prefix", type=str, default="", help="prefix to output names", required=False)
+    parser.add_argument("input", type=str, help="input glob expression")
+    parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_pre_processing_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser = crate_parser()
     parser.add_argument("-m", "--mni-file", type=str, help="mni file", required=True)
-    parser.add_argument('output', type=str, help='Output directory')
+    parser.add_argument("input", type=str, help="input glob expression")
+    parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_skull_strip_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser = crate_parser()
+    parser.add_argument("-s", "--strip", type=str, default="_normalizedWarped",
+                        help="pattern to strip from output name", required=False)
+    parser.add_argument("-a", "--append", type=str, default="_brain",
+                        help="pattern to append to output name", required=False)
+    parser.add_argument("input", type=str, help="input glob expression")
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 
@@ -78,35 +92,35 @@ def default_template_extra_args():
 
 
 def build_template_command_syn_average_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
+    parser = crate_parser()
     parser.add_argument("-e", "--extra-args", type=str, default=default_template_extra_args(),
                         help="extra arguments", required=False)
-    parser.add_argument("-i", "--input", type=str, help="input path", required=True)
-    parser.add_argument('output', type=str, help='Output directory')
+    parser.add_argument("input", type=str, help="input glob expression")
+    parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_segmentation_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser = crate_parser()
     parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
     parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
-    parser.add_argument('output', type=str, help='Output directory')
+    parser.add_argument("input", type=str, help="input glob expression")
+    parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_label_geometry_measures_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser = crate_parser()
+    parser.add_argument("input", type=str, help="input glob expression")
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 
 
 def build_image_intensify_stat_jac_arg_parser():
-    parser = ArgumentParser(usage="%(prog)s [options] output_directory")
-    parser.add_argument("-i", "--input", type=str, help="input path as a glob expression", required=True)
+    parser = crate_parser()
     parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
-    parser.add_argument('output', type=str, help='Output directory')
+    parser.add_argument("input", type=str, help="input glob expression")
+    parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
@@ -126,15 +140,15 @@ def locate_script(python_path, script_name):
     return os.path.join(dir_path, script_name)
 
 
-def replace(src_args, dst_args):
+def replace(override_args, default_args):
     def to_dictionary(str_args):
         temp = str_args.split()
 
         return dict(zip(list(filter(lambda x: x.startswith('-'), temp)),
                         list(filter(lambda x: not x.startswith('-'), temp))))
 
-    dst_dict = to_dictionary(dst_args)
-    dst_dict.update(to_dictionary(src_args))
+    dst_dict = to_dictionary(default_args)
+    dst_dict.update(to_dictionary(override_args))
 
     def to_string(d):
         import json
@@ -142,3 +156,11 @@ def replace(src_args, dst_args):
         return json.dumps(d).replace('{', '').replace(',', '').replace(':', '').replace('"', '').replace('}', '')
 
     return to_string(dst_dict)
+
+
+def execute(cmd):
+    logger.info(cmd)
+    code = os.system(cmd)
+
+    if code != 0:
+        raise Exception("Failed to execute command: " + cmd)

@@ -35,7 +35,7 @@ def convert(argv):
         except Exception as ex:
             logger.warning('Processing {0} encountered exception {1}'.format(folder, ex))
 
-    logger.info('Exiting!')
+    logger.info('Done')
 
 
 def main():

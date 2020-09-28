@@ -1,6 +1,5 @@
 import os
 from glob import glob
-from subprocess import call
 
 from . import utils
 
@@ -23,7 +22,9 @@ def image_intensity_stat_jac(argv):
         output_name = output_name[:idx]
         output = os.path.join(args.output, output_name + '.txt')
         logger.info("Saving to file name: {0}".format(output))
-        os.system('ImageIntensityStatistics {0} {1} {2} > {3}'.format(3, file_name, atlas, output))
+        utils.execute('ImageIntensityStatistics {0} {1} {2} > {3}'.format(3, file_name, atlas, output))
+
+    logger.info('Done')
 
 
 def main():

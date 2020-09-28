@@ -20,7 +20,8 @@ def segmentation(argv):
         logger.info('Processing {0}'.format(file))
 
         output_name = os.path.basename(file)
-        idx = output_name.rindex('_brain.nii.gz')
+        #idx = output_name.rindex('_brain.nii.gz')
+        idx = output_name.rindex('_brain.nii')
         output_name = output_name[:idx]
         logger.debug('Output name: {0}'.format(output_name))
 
@@ -29,7 +30,7 @@ def segmentation(argv):
         os.makedirs(outputSyn, exist_ok=True)
         outputSyn = os.path.join(outputSyn, output_name + '_preprocessed_SyN')
         logger.info('Registering {0}'.format(file))
-        os.system(
+        utils.execute(
             'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2}'.format(
                 template, file, outputSyn))
 
@@ -37,7 +38,7 @@ def segmentation(argv):
         outputAffine = os.path.join(args.output, 'REGIS', 'Affine')
         os.makedirs(outputAffine, exist_ok=True)
         outputAffine = os.path.join(outputAffine, output_name + '_preprocessed_affine')
-        os.system(
+        utils.execute(
             'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2} -t a'.format(
                 template, file, outputAffine))
 
@@ -45,7 +46,7 @@ def segmentation(argv):
         outputAffine2Syn = os.path.join(args.output, 'REGIS', 'Affine2SyN')
         os.makedirs(outputAffine2Syn, exist_ok=True)
         outputAffine2Syn = os.path.join(outputAffine2Syn, output_name + '_preprocessed_affine2Syn')
-        os.system(
+        utils.execute(
             'antsRegistrationSyNQuick.sh -d 3 -n 4 -f {0} -m {1} -o {2} -t so'.format(
                 template, outputAffine + 'Warped.nii.gz',  outputAffine2Syn))
 
@@ -55,7 +56,7 @@ def segmentation(argv):
         os.makedirs(outputSeg, exist_ok=True)
         outputSeg = os.path.join(outputSeg, output_name + '_segmentation_cortical_phy.nii.gz')
         transforms = '[' + outputSyn + '0GenericAffine.mat,1] ' + outputSyn + '1InverseWarp.nii.gz'
-        os.system(
+        utils.execute(
             'antsApplyTransforms -f 0 -d 3 -n GenericLabel[Linear] -i {0} -o {1} -r {2} -t {3}'.format(
                 atlas, outputSeg, file, transforms))
         end = time.time()
@@ -67,13 +68,13 @@ def segmentation(argv):
         os.makedirs(outputSeg, exist_ok=True)
         outputSeg = os.path.join(outputSeg, output_name + '_segmentation_cortical_affine.nii.gz')
         transforms = '[' + outputAffine2Syn + '0GenericAffine.mat,1] ' + outputAffine2Syn + '1InverseWarp.nii.gz'
-        os.system(
+        utils.execute(
             'antsApplyTransforms -f 0 -d 3 -n GenericLabel[Linear] -i {0} -o  {1} -r {2}Warped.nii.gz -t {3}'.format(
                 atlas, outputSeg, outputAffine, transforms))
         end = time.time()
         logger.info("Affine: {0}".format(end - start))
 
-    logger.info('Exiting!')
+    logger.info('Done')
 
 
 def main():

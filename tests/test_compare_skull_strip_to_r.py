@@ -46,8 +46,8 @@ def skull_strip_input():
 
 
 @pytest.fixture
-def skull_strip_output_dir(output_dir):
-    return os.path.join(output_dir, 'brains')
+def skull_strip_output_dir():
+    return os.path.join(output_dir(), 'brains')
 
 
 def test_skull_strip(skull_strip_input, skull_strip_output_dir):

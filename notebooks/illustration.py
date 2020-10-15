@@ -1,34 +1,29 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[16]:
+# In[1]:
 
 
-from tbi.segmentation import segmentation
-from tbi.label_geometry_measures import label_geometry_measures
-from tbi.image_intensity_stat_jac import image_intensity_stat_jac
-from tbi.skull_strip import skull_strip
-from tbi.preprocessing import preprocessing
+import tbi
 
 from glob import glob
-from nilearn.plotting import plot_img
 import nilearn.plotting as plotting
 import pandas as pd
 from os.path import join
 from IPython.display import display
 
 
-# In[17]:
+# In[3]:
 
 
-output = '/data/illustration/py-out3'
-mni_file = 'illustration_data/MNI152_T1_1mm_brain.nii'
+output = '/data/illustration/py-out4'
+mni_file = 'illustration_data/MNI152_T1_1mm_brain.nii.gz'
 atlas_file = 'illustration_data/New_atlas_cort_asym_sub.nii.gz'
 template_file = 'illustration_data/T_template0.nii.gz'
 convert_dir = 'illustration_data/convert'
 
 
-# In[18]:
+# In[4]:
 
 
 preprocessing_dir = join(output, 'preprocessing')
@@ -37,42 +32,42 @@ preprocessing_args = ['-m',
                       join(convert_dir, '*.nii.gz'), 
                       preprocessing_dir
                      ]
-preprocessing(preprocessing_args)
+tbi.preprocessing(preprocessing_args)
 
 
-# In[19]:
+# In[5]:
 
 
 nii_files = glob(join(preprocessing_dir, "*.nii.gz"))
 
 for nii_file in nii_files:
     print('Plotting {0}'.format(nii_file))
-    plot_img(nii_file)
+    plotting.plot_img(nii_file)
     plotting.show()
 
 
-# In[20]:
+# In[6]:
 
 
 skull_strip_dir = join(output, 'brains')
 skull_strip_args = [join(preprocessing_dir, '*_normalizedWarped.nii.gz'),
                     skull_strip_dir
                    ]
-skull_strip(skull_strip_args)
+tbi.skull_strip(skull_strip_args)
 
 
-# In[21]:
+# In[7]:
 
 
 nii_files = glob(join(skull_strip_dir, "*.nii.gz"))
 
 for nii_file in nii_files:
     print('Plotting {0}'.format(nii_file))
-    plot_img(nii_file)
+    plotting.plot_img(nii_file)
     plotting.show()
 
 
-# In[22]:
+# In[8]:
 
 
 brains = join(skull_strip_dir, '*.nii.gz')
@@ -85,20 +80,20 @@ segmentation_args = ['-t',
                      segmentation_dir
                     ]
 
-segmentation(segmentation_args)
+tbi.segmentation(segmentation_args)
 
 
-# In[23]:
+# In[9]:
 
 
 nii_files = glob(join(segmentation_dir, 'SEG/*/*.nii.gz'))
 for nii_file in nii_files:
     print(nii_file)
-    plot_img(nii_file)
+    plotting.plot_img(nii_file)
     plotting.show()
 
 
-# In[24]:
+# In[4]:
 
 
 label_geometry_measures_dir = join(output, 'label_geometry_measures')
@@ -106,47 +101,40 @@ label_geometry_measures_args = [join(segmentation_dir, 'SEG/*/*.nii.gz'),
                                 label_geometry_measures_dir
                                ]
 
-label_geometry_measures(label_geometry_measures_args)
+tbi.label_geometry_measures(label_geometry_measures_args)
 
 
-# In[25]:
+# In[5]:
 
 
-txt_files = glob(join(label_geometry_measures_dir, "*.txt"))
-names='Label,Volume(voxels),SurfArea(mm^2), Eccentricity, Elongation, Orientation,Centroid, Axes Length, Bounding Box'
+csv_files = glob(join(label_geometry_measures_dir, "*.csv"))
 
-for txt_file in txt_files:
-    print('Displaying {0}'.format(txt_file))
-    df = pd.read_csv(txt_file, 
-        sep=r' {2,}', 
-        engine='python', 
-        index_col=0, skiprows=[0], header=None, names=names.split(','))
-    display(df)
+for csv_file in csv_files:
+    df = pd.read_csv(csv_file)
+    display(df.iloc[0:115,0:5])
 
 
-# In[26]:
+# In[6]:
 
 
-image_intensity_stat_jac_dir = join(output, 'image_intensity_stat_jac')
-image_intensity_stat_jac_args = ['-a',
+image_intensity_stat_dir = join(output, 'image_intensity_stat')
+image_intensity_stat_args = ['-a',
                                  atlas_file,
                                  join(segmentation_dir, 'REGIS/Affine2SyN/*affine2Syn1Warp.nii.gz'), 
-                                 image_intensity_stat_jac_dir
+                                 image_intensity_stat_dir
                                 ]
 
-image_intensity_stat_jac(image_intensity_stat_jac_args)
+tbi.image_intensity_stat(image_intensity_stat_args)
 
 
-# In[27]:
+# In[7]:
 
 
-txt_files = glob(join(image_intensity_stat_jac_dir, "*.txt"))
-names='Label,Volume(voxels),SurfArea(mm^2), Eccentricity, Elongation, Orientation,Centroid, Axes Length, Bounding Box'
+csv_files = glob(join(image_intensity_stat_dir, "*.csv"))
 
-for txt_file in txt_files:
-    print('Displaying {0}'.format(txt_file))
-    df = pd.read_csv(txt_file, sep=' +', engine='python', index_col=0)
-    display(df)
+for csv_file in csv_files:
+    df = pd.read_csv(csv_file)
+    display(df.iloc[0:115,0:5])
 
 
 # In[ ]:

@@ -62,6 +62,8 @@ def crate_parser(usage="%(prog)s [options] input_glob_expression output_director
 def build_convert_arg_parser():
     parser = crate_parser()
     parser.add_argument("-p", "--prefix", type=str, default="", help="prefix to output names", required=False)
+    parser.add_argument("--use-dcm2niix", action="store_true", default=False, 
+                        help="use dcm2niix instead dicom_series_to_nifti")
     parser.add_argument("input", type=str, help="input glob expression")
     parser.add_argument('output', type=str, help='output directory')
     return parser
@@ -116,7 +118,7 @@ def build_label_geometry_measures_arg_parser():
     return parser
 
 
-def build_image_intensify_stat_jac_arg_parser():
+def build_image_intensify_stat_arg_parser():
     parser = crate_parser()
     parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
     parser.add_argument("input", type=str, help="input glob expression")

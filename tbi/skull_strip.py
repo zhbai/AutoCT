@@ -1,4 +1,6 @@
 import os
+import sys
+
 from glob import glob
 
 from . import utils
@@ -45,7 +47,6 @@ def skull_strip(pattern, output, strip='_normalizedWarped', append='_brain'):
 
     logger.info('Done')
 
-import sys
 
 def main(argv=sys.argv[1:]):
     parser = utils.build_skull_strip_arg_parser()

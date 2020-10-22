@@ -18,6 +18,7 @@ setup(
               'tbi-preprocessing = tbi.preprocessing:main',
               'tbi-skull-strip = tbi.skull_strip:main',
               'tbi-template-command-syn-average = tbi.template_command_syn_average:main',
+              'tbi-registration = tbi.registration:main',
               'tbi-segmentation = tbi.segmentation:main',
               'tbi-image-intensity-stat = tbi.image_intensity_stat:main',
               'tbi-label-geometry-measures = tbi.label_geometry_measures:main'

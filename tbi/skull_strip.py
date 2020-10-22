@@ -3,24 +3,22 @@ from glob import glob
 
 from . import utils
 
+logger = utils.init_logger('tbi.skull_strip')
 
-def skull_strip_using_py(argv):
+
+def skull_strip(pattern, output, strip='_normalizedWarped', append='_brain'):
     import nibabel as nib
     from .fsl import fsl_skull_strip
     from .image_utils import rescale_img, calibrate_img, drop_img_dim
     import tempfile
 
-    logger = utils.init_logger('tbi.skull_strip', True)
-    parser = utils.build_skull_strip_arg_parser()
-    args = parser.parse_args(argv)
-    logger.info('Arguments: {0}'.format(args))
 
-    os.makedirs(args.output, exist_ok=True)
+    os.makedirs(output, exist_ok=True)
 
-    files = glob(args.input)
+    files = glob(pattern)
     files.sort()
     logger.debug('Processing files {0}'.format(files))
-    os.makedirs(args.output, exist_ok=True)
+    os.makedirs(output, exist_ok=True)
     temp_dir = tempfile.TemporaryDirectory()
 
     for file in files:
@@ -36,9 +34,9 @@ def skull_strip_using_py(argv):
         logger.info('Calibrating image @ {0}'.format(file))
         calibrate_img(img)
         nib.save(img, temp_file)
-        idx = file_name.index(args.strip)
-        output = os.path.join(args.output,
-                              file_name[0:idx] + args.append + '.nii.gz')
+        idx = file_name.index(strip)
+        output = os.path.join(output,
+                              file_name[0:idx] + append + '.nii.gz')
         img = fsl_skull_strip(temp_file, temp_dir.name)
         img = drop_img_dim(img)
         calibrate_img(img)
@@ -47,46 +45,15 @@ def skull_strip_using_py(argv):
 
     logger.info('Done')
 
+import sys
 
-def skull_strip_using_r(argv):
-    logger = utils.init_logger('tbi.skull_strip', True)
+def main(argv=sys.argv[1:]):
     parser = utils.build_skull_strip_arg_parser()
     args = parser.parse_args(argv)
     logger.info('Arguments: {0}'.format(args))
 
-    script = utils.locate_script(__file__, 'skull_strip.R')
-    logger.info('Using R script at {0}'.format(script))
-    os.makedirs(args.output, exist_ok=True)
-
-    files = glob(args.input)
-    files.sort()
-
-    logger.debug('Processing files {0}'.format(files))
-    os.makedirs(args.output, exist_ok=True)
-
-    for file in files:
-        logger.info('Processing file {0}'.format(file))
-        utils.execute('Rscript {0} {1} {2} {3} {4}'.format(script,
-                                                           file,
-                                                           args.output,
-                                                           args.strip,
-                                                           args.append))
-
-    logger.info('Done')
-
-
-def skull_strip(argv):
-    if utils.use_r():
-        skull_strip_using_r(argv)
-    else:
-        skull_strip_using_py(argv)
-
-
-def main():
-    import sys
-
-    skull_strip(sys.argv[1:])
+    skull_strip(args.input, args.output, args.strip, args.append)
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

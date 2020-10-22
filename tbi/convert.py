@@ -1,24 +1,23 @@
-import os
-from glob import glob
-
 import dicom2nifti
+import os
+import sys
+
+from glob import glob
 
 from . import utils
 
+logger = utils.init_logger('tbi.convert')
 
-def convert(argv):
+
+def convert(pattern, output, prefix='', use_dcm2niix=False):
     utils.init_dicom2nifti_settings()
-    logger = utils.init_logger('tbi.convert', True)
-    parser = utils.build_convert_arg_parser()
-    args = parser.parse_args(argv)
-    logger.info('Using args:{0}'.format(args))
 
-    folders = glob(args.input)
-    logger.debug('Processing folders {0}'.format(folders))
-    os.makedirs(args.output, exist_ok=True)
+    folders = glob(pattern)
+    logger.debug('Processing folders {}'.format(folders))
+    os.makedirs(output, exist_ok=True)
 
     for folder in folders:
-        logger.info('Processing folder {0}'.format(folder))
+        logger.info('Processing folder {}'.format(folder))
 
         if folder.endswith('/'): 
            output_name = os.path.basename(os.path.dirname(folder)) 
@@ -28,31 +27,33 @@ def convert(argv):
         output_name = output_name.replace(' ', '_')
         output_name = output_name.replace('.', '_')
 
-        if args.prefix:
-           output_name = args.prefix + '_' + output_name
+        if prefix:
+           output_name = prefix + '_' + output_name
 
-        output_file = os.path.join(args.output, output_name+".nii.gz")
-        logger.debug('Saving to {0}'.format(output_file))
+        output_file = os.path.join(output, output_name+".nii.gz")
+        logger.debug('Saving to {}'.format(output_file))
 
         try:
-            if args.use_dcm2niix:
-               cmd = 'dcm2niix -w 1 -z y -o {0} -f {1} {2}'.format(args.output, output_name, folder)
+            if use_dcm2niix:
+               cmd = 'dcm2niix -w 1 -z y -o {} -f {} {}'.format(output, output_name, folder)
                utils.execute(cmd)
             else:
                dicom2nifti.dicom_series_to_nifti(folder, output_file, reorient_nifti=True)
 
-            logger.info('Saved {0}'.format(output_file))
+            logger.info('Saved {}'.format(output_file))
         except Exception as ex:
-            logger.warning('Processing {0} encountered exception {1}'.format(folder, ex))
+            logger.warning('Processing {} encountered exception {}'.format(folder, ex))
 
     logger.info('Done')
 
 
 def main():
-    import sys
+    parser = utils.build_convert_arg_parser()
+    args = parser.parse_args(argv)
+    logger.info('Using args:{}'.format(args))
 
-    convert(sys.argv[1:])
+    convert(args.input, args.output, args.prefix, args.use_dcm2niix)
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

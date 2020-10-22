@@ -4,13 +4,10 @@ import os
 
 logger = logging.getLogger('tbi.utils')
 
+_LOGGER_SETUP = False
 
-def use_r():
-    return os.environ.get('USE_R', 'false').lower() == 'true'
-
-
-def init_logger(name, setup=False):
-    if setup:
+def init_logger(name):
+    if not _LOGGER_SETUP:
         setup_logging()
 
     return logging.getLogger(name)
@@ -51,6 +48,7 @@ def setup_logging():
     }
 
     logging.config.dictConfig(config_dict)
+    _LOGGER_SETUP = True
 
 
 def crate_parser(usage="%(prog)s [options] input_glob_expression output_directory"):
@@ -102,9 +100,15 @@ def build_template_command_syn_average_arg_parser():
     return parser
 
 
-def build_segmentation_arg_parser():
+def build_registration_arg_parser():
     parser = crate_parser()
     parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
+    parser.add_argument("input", type=str, help="input glob expression")
+    parser.add_argument('output', type=str, help='output directory')
+    return parser
+
+def build_segmentation_arg_parser():
+    parser = crate_parser()
     parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
     parser.add_argument("input", type=str, help="input glob expression")
     parser.add_argument('output', type=str, help='output directory')

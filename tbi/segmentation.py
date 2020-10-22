@@ -1,5 +1,7 @@
 import os
+import sys
 import time
+
 from glob import glob
 
 from . import utils
@@ -73,8 +75,6 @@ def segmentation(pattern, output, atlas):
 
     logger.info('Done')
 
-
-import sys
 
 def main(argv=sys.argv[1:]):
     parser = utils.build_segmentation_arg_parser()

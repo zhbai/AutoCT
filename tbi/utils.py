@@ -166,7 +166,7 @@ def replace(override_args, default_args):
 
 def execute(cmd):
     logger.info(cmd)
-    code = os.system(cmd)
+    code = os.system(cmd + ' > /dev/null')
 
     if code != 0:
         raise Exception("Failed to execute command: " + cmd)

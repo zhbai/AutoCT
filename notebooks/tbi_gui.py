@@ -445,28 +445,33 @@ def create_stat_box(output, header):
 
 __HEADERS__ = (
     """ 
-    REPLACE_ME
+    Input: input a series of .dcm files.
     """,
     """ 
-    REPLACE_ME
+    Convert: convert .dcm files to .nii files.
     """,
     """ 
-    REPLACE_ME
-    """,
-    """ 
-    REPLACE_ME
-    """,
-    """ 
-    REPLACE_ME
-    """,
-    """ 
-    REPLACE_ME
-    """,
-    """ 
-    REPLACE_ME
+    Preprocessing: process image orientation, voxel size/resolution, bias correction and pre-alignment.
     """,
     """
-    REPLACE_ME
+    SkullStrip: strip the skull from CT volume.
+    """,
+    """ 
+    Registration: register the skull-stripped CT scan to a template.
+    - 3 stages: rigid + affine + deformable syn.
+    - 2 stages: rigid + affine.
+    - 1 stage: deformable syn only.
+    """,
+    """ 
+    Segmentation: segment the skull-stripped CT scan based on a given atlas.
+    - Physical: segmentation in the (pre-processed) patient's space.
+    - Affine: segmentaion in the transformed affine space.
+    """,
+    """ 
+    GeoMeasures: show geometric measures (volume, area, eccentricity, elongation, orientation, centroid, axes length, bounding box) of the segmented regions.
+    """,
+    """
+    WarpStats: calculate statistics (mean, sigma, skewness, kurtosis, entropy, sum, 5th%, 95th%) of warp image for each region of the brain.
     """)
 
 __CREATE_FUNCS__ = (create_input_box, 
@@ -485,7 +490,7 @@ __TITLES__ = ('Inputs',
           'Registration',
           'Segmentation', 
           'GeoMeasures', 
-          'IntesityStats')
+          'WarpStats')
 
 def display_gui():
     boxes = []

@@ -241,28 +241,28 @@ def create_panel(*boxes):
 
 
 def apply_inputs(output, output_dir_textfield, template_textfield, atlas_textfield, mni_textfield, b):
+    from tbi import utils
+    
+    logger = utils.init_logger('tbi.gui')
     output.clear_output()
 
     with output:
         err = False
+        
+        if isdir(output_dir_textfield.value):
+            logger.warning('warning: directory exists ... {}'.format(output_dir_textfield.value))
 
         if not isfile(template_textfield.value):
             err = True
-            print('template file does not exist', template_textfield.value)
+            logger.error('template file does not exist {}'.format(template_textfield.value))
 
         if not isfile(atlas_textfield.value):
             err = True
-            print('atlas file does not exist', atlas_textfield.value)
+            logger.error('atlas file does not exist {}'.format(atlas_textfield.value))
 
         if not isfile(mni_textfield.value):
             err = True
-            print('mni file does not exist', mni_textfield.value)
-
-        if not output_dir_textfield.value.startswith('/data/'):
-            print('warning: you may be writting to non mounted volume', output_dir_textfield.value)
-
-        if isdir(output_dir_textfield.value):
-            print('warning: directory exists ...', output_dir_textfield.value)
+            logger.error('mni file does not exist {}'.format(mni_textfield.value))
 
         if err:
             return
@@ -275,15 +275,8 @@ def apply_inputs(output, output_dir_textfield, template_textfield, atlas_textfie
         for func, lst in Inputs.cache.items():
             for textfield in lst:
                 textfield.value = func()
-
-
-def run_convert(output, pattern_textfield, use_dcm2niix_checkbox, output_dir_textfield, b):
-    output.clear_output()
-
-    with output:
-        tbi.convert(pattern_textfield.value,
-                    output_dir_textfield.value,
-                    use_dcm2niix=use_dcm2niix_checkbox.value)
+                
+        logger.info('Inputs have been applied sucessfully')
 
 
 def show_images(output, pattern, output_dir_textfield, b):
@@ -323,6 +316,13 @@ def show_csv(output, pattern, output_dir_textfield, b):
             df = pd.read_csv(csv_file)
             display(df)
 
+def run_convert(output, pattern_textfield, use_dcm2niix_checkbox, output_dir_textfield, b):
+    output.clear_output()
+
+    with output:
+        tbi.convert(pattern_textfield.value,
+                    output_dir_textfield.value,
+                    use_dcm2niix=use_dcm2niix_checkbox.value)
 
 def run_preprocessing(output, mni_textfield,
                       pattern_textfield,

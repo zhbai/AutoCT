@@ -51,8 +51,7 @@ def skull_strip_output_dir():
 
 
 def test_skull_strip(skull_strip_input, skull_strip_output_dir):
-    args = [skull_strip_input, skull_strip_output_dir]
-    tbi.skull_strip(args)
+    tbi.skull_strip(skull_strip_input, skull_strip_output_dir)
 
     # File generated using R code
     skull_strip_expected = os.path.join(input_dir(), 'expected', 'skull_strip', skull_strip_filename())

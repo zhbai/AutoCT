@@ -2,30 +2,28 @@ from . import utils
 from glob import glob
 
 
-def syn_average(argv):
-    logger = utils.init_logger('tbi.template_command_syn_average', True)
-    parser = utils.build_template_command_syn_average_arg_parser()
-    args = parser.parse_args(argv)
-    logger.debug('Arguments: {0}'.format(args))
-    files = glob(args.input)
+def syn_average(pattern, output, extra_args):
+    logger = utils.init_logger('tbi.template_command_syn_average')
+    logger.info('Arguments: {}:{}:{}'.format(pattern, output, extra_args))
+    files = glob(pattern or '')
 
     if len(files) < 2:
-        raise Exception('Must  provide at least two nii files: Found {0}'.format(files))
+        raise Exception('Must  provide at least two nii files: Found {}'.format(files))
 
-    logger.debug('Using {0} files'.format(files))
+    logger.debug('Using {} files'.format(files))
 
     cmd = 'antsMultivariateTemplateConstruction.sh'
-    template_args = utils.replace(args.extra_args, utils.default_template_extra_args())
-    template_args = template_args + ' -o {0}/T_ {1}'.format(args.output, args.input)
-    utils.execute('{0} {1}'.format(cmd, template_args))
+    template_args = utils.replace(extra_args, utils.default_template_extra_args())
+    logger.info('Using {}'.format(template_args))
+    template_args = template_args + ' -o {}/T_ {}'.format(output, pattern)
+    utils.execute('{} {}'.format(cmd, template_args))
     logger.info('Done')
 
 
-def main():
+def main(argv=None):
     import sys
 
-    syn_average(sys.argv[1:])
-
-
-if __name__ == '__main__':
-    main()
+    parser = utils.build_template_command_syn_average_arg_parser()
+    argv = argv or sys.argv[1:]
+    args = parser.parse_args(argv)
+    syn_average(args.input, args.output, args.extra_args)

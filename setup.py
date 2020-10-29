@@ -10,7 +10,14 @@ setup(
     description='Description of my package',
     packages=find_packages(),    
     install_requires=[
-       'dicom2nifti==2.0.9', 'nilearn==0.6.2', 'pytest==6.0.1', 'matplotlib==3.0.3', 'pandas==1.1.2'
+       'dicom2nifti==2.0.9', 
+       'nibabel==3.2.0', 
+       'nilearn==0.6.2', 
+       'pytest==6.0.1', 
+       'matplotlib==3.0.3', 
+       'pandas==1.1.2',
+       'notebook==6.1.4',
+       'ipywidgets==7.5.1',
     ],
     entry_points={
        'console_scripts': [

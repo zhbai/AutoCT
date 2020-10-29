@@ -1,5 +1,4 @@
 import os
-import sys
 import tempfile
 
 from glob import glob
@@ -9,48 +8,82 @@ from . import utils
 logger = utils.init_logger('tbi.preprocessing')
 
 
-def preprocessing(pattern, output, mni_file):
-    file_names = glob(pattern)
-    file_names.sort()
-    logger.debug('Processing files {}'.format(file_names))
-    os.makedirs(output, exist_ok=True)
+def __preprocessing(file, out_dir, mni_file):
+    logger.info('Processing {}'.format(file))
 
-    for file in file_names:
-        logger.info('Processing file {}'.format(file))
+    temp = tempfile.TemporaryDirectory()
+    out1file = os.path.join(temp.name, 'swapped.nii.gz')
+    utils.execute('fslswapdim {} x -y z {}'.format(file, out1file))
+    out2file = os.path.join(temp.name, 'resampled.nii.gz')
+    utils.execute('3dresample -dxyz 1.0 1.0 1.0 -orient RPI -inset {} -prefix {}'.format(out1file,
+                                                                                         out2file))
 
-        temp = tempfile.TemporaryDirectory()
-        logger.debug('Using temporary directory {}'.format(temp))
+    out3file = os.path.join(temp.name, 'reduced.nii.gz')
+    utils.execute('robustfov -i {} -r {}'.format(out2file, out3file))
 
-        out1file = os.path.join(temp.name, 'out1.nii.gz')
-        utils.execute('fslswapdim {} x -y z {}'.format(file, out1file))
+    out4file = os.path.join(temp.name, 'corrected.nii.gz')
+    utils.execute('N4BiasFieldCorrection -d 3 -i {} -o {}'.format(out3file, out4file))
 
-        out2file = os.path.join(temp.name, 'out2.nii.gz')
-        utils.execute('3dresample -dxyz 1.0 1.0 1.0 -orient RPI -prefix {} -inset {}'.format(out2file,
-                                                                                             out1file))
-
-        out3file = os.path.join(temp.name, 'out3.nii.gz')
-        utils.execute('robustfov -i {} -r {}'.format(out2file, out3file))
-        utils.execute('N4BiasFieldCorrection -d 3 -i {} -o {}'.format(out3file, out3file))
-
-        file_name = os.path.basename(file)
-        logger.debug('Processing file_name {}'.format(file_name))
-        idx = file_name.index('.')
-        output = os.path.join(output, file_name[0:idx])
-        logger.debug('Saving to {}'.format(output))
-        fmt = '{} -d 3 -n 3 -f {} -m {} -o {}_normalized -t a'
-        cmd = 'antsRegistrationSyN.sh'
-        utils.execute(fmt.format(cmd, mni_file, out3file, output))
-        logger.info('Saved {0}'.format(output))
-
-    logger.info('Done')
+    out_file = os.path.join(out_dir, utils.prefix(file, '.nii'))
+    fmt = '{} -d 3 -n 3 -f {} -m {} -o {}_normalized -t a'
+    cmd = 'antsRegistrationSyN.sh'
+    utils.execute(fmt.format(cmd, mni_file, out4file, out_file))
+    logger.info('Saved to {}'.format(out_file))
 
 
-def main(argv= sys.argv[1:]):
+def preprocessing(pattern, out_dir, mni_file):
+    """Process image orientation, voxel size/resolution, bias correction and pre-alignment.
+
+    Parameters
+    ----------
+        pattern : str
+            Glob path expression to locate nii images
+        out_dir  : str
+            Output Directory
+        mni_file : str
+            Path to mni file
+    """
+
+    logger.info('Arguments: {}:{}:{}'.format(pattern, out_dir,  mni_file))
+    if not os.path.isfile(mni_file):
+        err_msg = 'Did not find mni file {}'.format(mni_file)
+        logger.error(err_msg)
+        return -1, err_msg
+
+    files = glob(pattern or '')
+    num_files = len(files)
+
+    if not num_files:
+        err_msg = 'Did not find any input file matching {}'.format(pattern)
+        logger.error(err_msg)
+        return -1, err_msg
+
+    try:
+        os.makedirs(out_dir, exist_ok=True)
+    except Exception as ex:
+        err_msg = 'Error creating directory {}'.format(ex)
+        logger.error(err_msg)
+        return -1, err_msg
+
+    count = 0
+    logger.info('Found {} files'.format(num_files))
+
+    for file in files:
+        try:
+            __preprocessing(file, out_dir, mni_file)
+            count += 1
+        except Exception as ex:
+            logger.warning('Processing {} encountered exception {}'.format(file, ex))
+
+    return utils.status(count, num_files)
+
+
+def main(argv=None):
+    import sys
+
+    argv = argv or sys.argv[1:]
     parser = utils.build_pre_processing_arg_parser()
     args = parser.parse_args(argv)
     logger.info('Using args:{}'.format(args))
-    preprocessing(args.input, args.output, args.mni_file)
-
-
-if __name__ == '__main__':
-    main(sys.argv[1:])
+    code, _ = preprocessing(args.input, args.output, args.mni_file)
+    sys.exit(code)

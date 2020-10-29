@@ -1,10 +1,23 @@
 import logging
-import logging.config
 import os
 
 logger = logging.getLogger('tbi.utils')
 
 _LOGGER_SETUP = False
+
+_err_msg_fmt = 'There were errors! (processed={}:expected={})'
+
+
+def status(processed, expected):
+    err, err_msg = (0, None) if processed == expected else (1, _err_msg_fmt.format(processed, expected))
+
+    if err:
+        logger.error('Done: {}'.format(err_msg))
+    else:
+        logger.info('Done: processed={}'.format(processed))
+
+    return err, err_msg
+
 
 def init_logger(name):
     if not _LOGGER_SETUP:
@@ -17,8 +30,8 @@ def _get_default_level():
     return os.environ.get('TBI_LOG_LEVEL', logging.INFO)
 
 
-def setup_logging():
-    default_level = _get_default_level()
+def setup_logging(level=None):
+    level = level or _get_default_level()
 
     config_dict = {
         'version': 1,
@@ -33,7 +46,7 @@ def setup_logging():
         },
         'handlers': {
             'console': {
-                'level': default_level,
+                'level': level,
                 'class': 'logging.StreamHandler',
                 'formatter': 'detailed',
             }
@@ -41,47 +54,83 @@ def setup_logging():
         'loggers': {
             'tbi': {
                 'handlers': ['console'],
-                'level': default_level,
+                'level': level,
                 'propagate': True
             }
         }
     }
 
-    logging.config.dictConfig(config_dict)
+    import logging.config as config
+
+    config.dictConfig(config_dict)
+
+    global _LOGGER_SETUP
+
     _LOGGER_SETUP = True
 
 
-def crate_parser(usage="%(prog)s [options] input_glob_expression output_directory"):
-    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+def create_parser(usage='%(prog)s [options] input_glob_expression output_directory', 
+                  description='', 
+                  formatter_class=None):
+    from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
-    return ArgumentParser(usage=usage, formatter_class=ArgumentDefaultsHelpFormatter)
+    formatter_class = formatter_class or RawDescriptionHelpFormatter
+    return ArgumentParser(usage=usage, description=description, formatter_class=formatter_class)
 
 
 def build_convert_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-p", "--prefix", type=str, default="", help="prefix to output names", required=False)
-    parser.add_argument("--use-dcm2niix", action="store_true", default=False, 
-                        help="use dcm2niix instead dicom_series_to_nifti")
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Convert a series of .dcm files to .nii.gz files.'
+           '\n'
+           '\n'
+           'Examples:'
+           '\n'
+           "      tbi-convert 'dcmfiles/*' convert"
+           '\n'
+           "      tbi-convert --use-dcm2niix 'dcmfiles/*' convert"
+           '\n'
+    )
+
+    parser = create_parser(description=description)
+    parser.add_argument('-p', '--prefix', type=str, default='', help='prefix to output names', required=False)
+    parser.add_argument('--use-dcm2niix', action='store_true', default=False, 
+                        help='use dcm2niix instead dicom_series_to_nifti')
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_pre_processing_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-m", "--mni-file", type=str, help="mni file", required=True)
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Process image orientation, voxel size/resolution, bias correction and pre-alignment.'
+           '\n'
+           '\n'
+           'Example:'
+           '\n'
+           "      tbi-preprocessing -m MNI152_T1_1mm_brain.nii.gz 'convert/*.nii.gz' preprocessing"
+           '\n'
+    )
+
+    parser = create_parser(description=description)
+    parser.add_argument('-m', '--mni-file', type=str, help='mni file', required=True)
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_skull_strip_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-s", "--strip", type=str, default="_normalizedWarped",
-                        help="pattern to strip from output name", required=False)
-    parser.add_argument("-a", "--append", type=str, default="_brain",
-                        help="pattern to append to output name", required=False)
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Strip the skull from CT volume.'
+           '\n'
+           '\n'
+           'Example:'
+           '\n'
+           "      tbi-skull-strip  'preprocessing/*.nii.gz' brains"
+           '\n'
+    )
+
+    parser = create_parser(description=description)
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 
@@ -92,40 +141,129 @@ def default_template_extra_args():
 
 
 def build_template_command_syn_average_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-e", "--extra-args", type=str, default=default_template_extra_args(),
-                        help="extra arguments", required=False)
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Create template from a list of nii files.'
+           '\n'
+           '\n'
+           'Examples:'
+           '\n'
+           "      tbi-template-command-syn-average 'brains/*.nii.gz' template_output"
+           '\n'
+           "      tbi-template-command-syn-average -e '-i 5' 'brains/*.nii.gz' template_output"
+           '\n'
+    )
+
+    defaults = default_template_extra_args()
+    parser = create_parser(description=description)
+    parser.add_argument('-e', '--extra-args', type=str, default=defaults,
+                        help='extra arguments (defaults to %s)' % defaults, required=False)
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='output directory')
     return parser
+
+
+def supported_registration_transforms():
+    return 's', 'a', 'so'
 
 
 def build_registration_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-t", "--template-file", type=str, help="template file", required=True)
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Register the skull-stripped CT scan to a template.'
+           '\n'
+           '\n'
+           'Supported transforms:'
+           '\n'
+           '        a:  rigid + affine (2 stages)'
+           '\n'
+           '        s:  rigid + affine + deformable syn (3 stages)'
+           '\n'
+           '        so: deformable syn only (1 stage) Depends on transform [a]'
+           '\n'
+           'Examples:'
+           '\n'
+           "      tbi-registration -T a so -t T_template0.nii.gz  'brains/*.nii.gz' registration"
+           '\n'
+           "      tbi-registration -T s -t T_template0.nii.gz  'brains/*.nii.gz' registration"
+           '\n'
+    )
+
+    parser = create_parser(description=description)
+    defaults = list(supported_registration_transforms())
+    parser.add_argument('-T', '--transforms', nargs='+', default=defaults,
+                        help='transforms to use (defaults to %s)' % defaults)
+    parser.add_argument('-t', '--template-file', type=str, help='template file', required=True)
+    parser.add_argument('input', type=str, help='input glob expression for skull-stripped CT scans')
     parser.add_argument('output', type=str, help='output directory')
     return parser
 
+
+def supported_segmentation_types():
+    return 'Affine', 'Physical'
+
+
 def build_segmentation_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Segment the registered skull-stripped CT scan based on a given atlas.'
+           '\n'
+           '\n'
+           'Supported segmentation types:'
+           '\n'
+           '        Affine:   Segmentation in the transformed affine space. '
+           '\n'
+           '        Physical: segmentation in the pre-processed patient space'
+           '\n'
+           'Examples:'
+           '\n'
+           "    tbi-segmentation -T Physical -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'" 
+           " segmentation"
+           '\n'
+           "    tbi-segmentation -T Affine, Physical -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'"
+           " segmentation"
+           '\n'
+    )
+
+    parser = create_parser(description=description)
+    defaults = list(supported_segmentation_types())
+    parser.add_argument('-T', '--types', nargs='+', default=defaults,
+                        help='segmentation types to use (defaults to %s)' % defaults)
+    parser.add_argument('-a', '--atlas-file', type=str, help='atlas file', required=True)
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='output directory')
     return parser
 
 
 def build_label_geometry_measures_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+           'Show geometric measures of the segmented regions.'
+           '\n'
+           '\n'
+           'Example:'
+           '\n'
+           "      tbi-label-geometry-measures 'segmentation/*/*.nii.gz' label-geometry-measures"
+           '\n'
+    )
+
+    parser = create_parser(description=description)
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='Output directory')
     return parser
 
 
 def build_image_intensify_stat_arg_parser():
-    parser = crate_parser()
-    parser.add_argument("-a", "--atlas-file", type=str, help="atlas file", required=True)
-    parser.add_argument("input", type=str, help="input glob expression")
+    description = (
+        'Calculate statistics of warp image for each region of the brain.'
+        '\n'
+        '\n'
+        'Example:'
+        '\n'
+        "      tbi-image-intensity-stat -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'"
+        " image_intensity_stat"
+        '\n'
+    )
+
+    parser = create_parser(description=description)
+    parser.add_argument('-a', '--atlas-file', type=str, help='atlas file', required=True)
+    parser.add_argument('input', type=str, help='input glob expression')
     parser.add_argument('output', type=str, help='output directory')
     return parser
 
@@ -144,6 +282,12 @@ def init_dicom2nifti_settings():
 def locate_script(python_path, script_name):
     dir_path = os.path.dirname(os.path.realpath(python_path))
     return os.path.join(dir_path, script_name)
+
+
+def prefix(file, pattern):
+    basename = os.path.basename(file)
+    idx = basename.rindex(pattern)
+    return basename[:idx]
 
 
 def replace(override_args, default_args):
@@ -165,8 +309,8 @@ def replace(override_args, default_args):
 
 
 def execute(cmd):
-    logger.info(cmd)
-    code = os.system(cmd + ' > /dev/null')
+    logger.debug(cmd)
+    code = os.system(cmd)
 
     if code != 0:
-        raise Exception("Failed to execute command: " + cmd)
+        raise Exception('Failed to execute command: ' + cmd)

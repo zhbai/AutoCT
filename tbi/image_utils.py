@@ -83,20 +83,3 @@ def rescale_img(img, amin=-1024, amax=3071):
 
     if tmax > amax:
         data[data > amax] = amax
-
-
-def load_as_3d(nii_file):
-    img = nib.load(nii_file)
-    shape = img.shape
-
-    if len(shape) > 3:
-        data = img.get_fdata()
-        slices = [0] * len(shape) 
-
-        for i in range(0, 3):
-            slices[i] = slice(0, shape[i])
-                
-        data = data[tuple(slices)]
-        img = img.__class__(data, affine=img.affine)
-
-    return img

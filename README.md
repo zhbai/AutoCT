@@ -1,4 +1,23 @@
-# Convert a series of .dcm files to .nii.gz files.
+# TBI Registration:
+
+## Typical Workflow
+- Convert dcm files to nii.gz.
+- Pre-process image orientation, voxel size/resolution, bias correction and pre-alignment.
+- Strip the skull from CT volume.
+- Register the skull-stripped CT scan to a given template.
+- Segment the skull-stripped CT scan based on a given atlas
+- Calculate geometric measures 
+- Calculate statistics of warp image for each region of the brain.
+
+## Getting Started
+   - Build docker image and use jupyter to run illustration notebook or tbi GUI notebook.
+      - Refer to [this document](./docker/README.md) for a detailed description.
+   - Running on NERSC:
+      - Refer to [this document](./docker/nersc.md) for a detailed description.
+
+# Sample Workflow Snapshots:
+
+### Convert a series of .dcm files to .nii.gz files.
 
 
 ```python
@@ -17,7 +36,7 @@ plot_images(join(output, 'convert', "*.nii.gz"))
     
 
 
-## Preprocess and strip the skull from CT volume.
+### Pre-process and strip the skull from CT volume.
 
 
 ```python
@@ -38,7 +57,7 @@ plot_images(join(output, 'brains', '*.nii.gz'))
     
 
 
-## Register the skull-stripped CT scan to a template and segment the skull-stripped CT scan based on a given atlas.
+### Register the skull-stripped CT scan to a template and segment the skull-stripped CT scan based on a given atlas.
 
 
 ```python

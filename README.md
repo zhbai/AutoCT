@@ -9,6 +9,8 @@
 - Calculate geometric measures 
 - Calculate statistics of warp image for each region of the brain.
 
+![png](pngs/flowchart.png)
+
 ## Getting Started
    - Build docker image and use jupyter to run illustration notebook or tbi GUI notebook.
       - Refer to [this document](./docker/README.md) for a detailed description.

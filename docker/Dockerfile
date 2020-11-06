@@ -158,7 +158,6 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
     && jupyter nbextension enable --py widgetsnbextension
 
 ADD notebooks /notebooks
-ADD illustration_data /notebooks/illustration_data
 RUN chown -R ${tbi_user}:${tbi_uid} /notebooks 
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]

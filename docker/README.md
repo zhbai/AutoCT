@@ -35,8 +35,7 @@ docker image list
 ### Run Docker Container
 
 The `docker run` shown below places you inside a container named `tbi-reg`. The -v option is used to mount a host 
-volume onto the docker container. The command below mounts the `tbi_registration` repository directory and a `data`
-directory.
+volume onto the docker container. The command below mounts  a `/data` directory.
 
 ```sh
 ## Replace  DATA_DIR_ON_HOST with the absolute path to your data on the host machine
@@ -60,30 +59,6 @@ tbi-image-intensity-stat -h
 ## Template tools:
 tbi-template-command-syn-average -h 
 ```
-### Example Workflow
-
-Change tbi-convert's input and output, template file (-t) , mni file (-m), and atlas file (-a)
-to run workflow with other data. 
-
-```sh
-tbi-convert '/data/BR-1001/*/*/' /data/output/convert
-
-tbi-preprocessing -m /data/MNI152_T1_1mm_brain.nii '/data/output/convert/*.nii' /data/output/preprocessing
-
-tbi-skull-strip '/data/output/preprocessing/*_normalizedWarped.nii.gz' /data/output/skull-strip
-
-tbi-registration -t /data/TemplateYoungM_128.nii.gz \
-  '/data/output/skull-strip/*_brain.nii.gz'  /data/output/registration
-
-tbi-segmentation -a /data/New_atlas_cort_asym_sub.nii.gz  \
-  '/data/output/registration/*/*.nii.gz'  /data/output/segmentation
-
-tbi-label-geometry-measures '/data/output/segmentation/*/*.nii.gz' /data/output/geometry_measures
-
-tbi-image-intensity-stat-jac  -a /data/New_atlas_cort_asym_sub.nii.gz \
-   '/data/output/registration/Affine2SyN/*affine2Syn1Warp.nii.gz' /data/output/intensity_stats
-
-```
 
 ### Stop/Restart Container
 
@@ -99,15 +74,37 @@ docker start -ia tbi-reg
 CTRL D
 docker rm -f tbi-reg 
 ```
+### Example Workflow using illustration data.
 
-### Running Example Python Script Using Docker Command.
-The docker run command below runs example.py  which resides in the container's working directory.
-To run another script you would need to mount it using the -v option.
-Note: the --rm option means the container `tbi-run-example` would be deleted upon exit
+The following commands allow you to run all the workflow steps. 
+Make sure you use the `-v` option to mount the `/data` directory when using `docker run`
+When you are done, the results should be on your host machine in  `DATA_DIR_ON_HOST`.
+Also note: the `--rm` option means the container `tbi-reg` would automatically be deleted upon exit
 
 ```sh
-## Replace DATA_DIR_ON_HOST with the absolute path to your data on the host machine
-docker run --rm --name tbi-run-example -v DATA_DIR_ON_HOST:/data -t tbi:1.0 python example.py
+## Replace  DATA_DIR_ON_HOST with the absolute path to an existing directory on the host machine
+## On host machine: 
+
+docker run --rm --name tbi-reg -v DATA_DIR_ON_HOST:/data -it tbi:1.0 /bin/bash
+
+## Inside container:
+tbi-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output/convert
+
+tbi-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/convert/*.nii.gz' \
+     /data/output/preprocessing
+
+tbi-skull-strip '/data/output/preprocessing/*.nii.gz' /data/output/skull-strip
+
+tbi-registration -t illustration_data/T_template0.nii.gz \
+  '/data/output/skull-strip/*.nii.gz'  /data/output/registration
+
+tbi-segmentation -a illustration_data/New_atlas_cort_asym_sub.nii.gz  \
+  '/data/output/registration/*/*.nii.gz'  /data/output/segmentation
+
+tbi-label-geometry-measures '/data/output/segmentation/*/*.nii.gz' /data/output/geometry_measures
+
+tbi-image-intensity-stat -a  illustration_data/New_atlas_cort_asym_sub.nii.gz \
+   '/data/output/registration/*/*.nii.gz' /data/output/intensity_stats
 ```
 
 ### Running Example Jupyter Notebook

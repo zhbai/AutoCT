@@ -149,11 +149,10 @@ RUN groupadd \
 # Installing python packages.
 ###
 ADD setup.py /build_dir/
-ADD MANIFEST.in /build_dir/
 ADD tbi /build_dir/tbi
 
-RUN python3 -m pip install --upgrade pip setuptools wheel \
-    && python3 -m pip install /build_dir \
+RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && python3 -m pip install --no-cache-dir /build_dir \
     && rm -rf /build_dir \
     && jupyter nbextension enable --py widgetsnbextension
 

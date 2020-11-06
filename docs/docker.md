@@ -1,4 +1,4 @@
-# AutoCT Registration
+# AutoCT
 
 ## Run AutoCT Scripts Using Docker
 
@@ -10,7 +10,7 @@
     
     Note: Docker was given 3 CPUs and 8G RAM. (on mac see Docker Preferences | Resources)
 
-#### AutoCT Registration Repository:
+#### AutoCT Repository:
 
 Clone the `tbi registration` repository and enter the `tbi_registration` directory:
 

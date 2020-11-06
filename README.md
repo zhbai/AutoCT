@@ -9,13 +9,13 @@
 - Calculate geometric measures 
 - Calculate statistics of warp image for each region of the brain.
 
-![png](pngs/flowchart.png)
+![png](docs/flowchart.png)
 
 ## Getting Started
    - Build docker image and use jupyter to run illustration notebook or tbi GUI notebook.
-      - Refer to [this document](./docker/README.md) for a detailed description.
+      - Refer to [this document](./docs/docker.md) for a detailed description.
    - Running on NERSC:
-      - Refer to [this document](./docker/nersc.md) for a detailed description.
+      - Refer to [this document](./docs/nersc.md) for a detailed description.
 
 # Sample Workflow Snapshots:
 
@@ -34,7 +34,7 @@ plot_images(join(output, 'convert', "*.nii.gz"))
 
 
     
-![png](pngs/output_1_1.png)
+![png](docs/output_1_1.png)
     
 
 
@@ -55,7 +55,7 @@ plot_images(join(output, 'brains', '*.nii.gz'))
 
 
     
-![png](pngs/output_3_1.png)
+![png](docs/output_3_1.png)
     
 
 
@@ -79,7 +79,7 @@ plot_images(join(output, 'segmentation', '*/*.nii.gz'))
 
 
     
-![png](pngs/output_5_1.png)
+![png](docs/output_5_1.png)
     
 
 
@@ -88,6 +88,6 @@ plot_images(join(output, 'segmentation', '*/*.nii.gz'))
 
 
     
-![png](pngs/output_5_3.png)
+![png](docs/output_5_3.png)
     
 

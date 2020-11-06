@@ -27,7 +27,6 @@ shifterimg pull registry.services.nersc.gov/$USER/tbi:1.0
 export DATA_ON_NERSC=????
 shifter --image=registry.services.nersc.gov/$USER/tbi:1.0 --volume=$DATA_ON_NERSC:/data /bin/bash
 tbi-template-command-syn-average -h
-tbi-template-command-syn-average -i /data/skulls /data/template-1
 ```
 
 ### Pull Image And Run On Compute Node

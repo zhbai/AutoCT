@@ -7,7 +7,7 @@ from IPython.display import display
 from os.path import join, isfile, isdir
 from functools import partial
 
-import tbi
+import autoct
 
 
 class ImageViewer:
@@ -164,7 +164,7 @@ class Inputs:
 
     @classmethod
     def stat_output_dir(cls):
-        return join(cls.outdir(), 'image_intensity_stat')
+        return join(cls.outdir(), 'warp_intensity_stats')
 
 
 def create_html(text, layout=widgets.Layout(height='100px', width='90%', size='10')):
@@ -241,9 +241,9 @@ def create_panel(*boxes):
 
 
 def apply_inputs(output, output_dir_textfield, template_textfield, atlas_textfield, mni_textfield, b):
-    from tbi import utils
+    from autoct import utils
     
-    logger = utils.init_logger('tbi.gui')
+    logger = utils.init_logger('autoct.gui')
     output.clear_output()
 
     with output:
@@ -320,9 +320,9 @@ def run_convert(output, pattern_textfield, use_dcm2niix_checkbox, output_dir_tex
     output.clear_output()
 
     with output:
-        tbi.convert(pattern_textfield.value,
-                    output_dir_textfield.value,
-                    use_dcm2niix=use_dcm2niix_checkbox.value)
+        autoct.convert(pattern_textfield.value,
+                       output_dir_textfield.value,
+                       use_dcm2niix=use_dcm2niix_checkbox.value)
 
 def run_preprocessing(output, mni_textfield,
                       pattern_textfield,
@@ -330,16 +330,16 @@ def run_preprocessing(output, mni_textfield,
                       b):
     output.clear_output()
     with output:
-        tbi.preprocessing(pattern_textfield.value,
-                          output_dir_textfield.value,
-                          mni_textfield.value)
+        autoct.preprocessing(pattern_textfield.value,
+                             output_dir_textfield.value,
+                             mni_textfield.value)
 
 
 def run_skull_strip(output, pattern_textfield, output_dir_textfield, b):
     output.clear_output()
 
     with output:
-        tbi.skull_strip(pattern_textfield.value, output_dir_textfield.value)
+        autoct.skull_strip(pattern_textfield.value, output_dir_textfield.value)
 
 
 def run_registration(output,
@@ -356,10 +356,10 @@ def run_registration(output,
             if checkbox.value:
                 transforms.append(checkbox.description)
 
-        tbi.registration(pattern_textfield.value,
-                         output_dir_textfield.value,
-                         template_textfield.value,
-                         transforms)
+        autoct.registration(pattern_textfield.value,
+                            output_dir_textfield.value,
+                            template_textfield.value,
+                            transforms)
 
 
 def run_segmentation(output,
@@ -376,17 +376,17 @@ def run_segmentation(output,
             if checkbox.value:
                 seg_types.append(checkbox.description)
 
-        tbi.segmentation(pattern_textfield.value,
-                         output_dir_textfield.value,
-                         atlas_textfield.value,
-                         seg_types)
+        autoct.segmentation(pattern_textfield.value,
+                            output_dir_textfield.value,
+                            atlas_textfield.value,
+                            seg_types)
 
 
 def run_label_geometry_measures(output, pattern_textfield, output_dir_textfield, b):
     output.clear_output()
     with output:
-        tbi.label_geometry_measures(pattern_textfield.value,
-                                    output_dir_textfield.value)
+        autoct.label_geometry_measures(pattern_textfield.value,
+                                       output_dir_textfield.value)
 
 
 def run_intensity_stat(output, atlas_textfield,
@@ -395,9 +395,9 @@ def run_intensity_stat(output, atlas_textfield,
                        run_button):
     output.clear_output()
     with output:
-        tbi.image_intensity_stat(pattern_textfield.value,
-                                 output_dir_textfield.value,
-                                 atlas_textfield.value)
+        autoct.warp_intensity_stats(pattern_textfield.value,
+                                    output_dir_textfield.value,
+                                    atlas_textfield.value)
 
 
 def create_input_box(output, header):

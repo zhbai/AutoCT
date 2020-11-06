@@ -3,7 +3,7 @@ from glob import glob
 
 
 def syn_average(pattern, output, extra_args):
-    logger = utils.init_logger('tbi.template_command_syn_average')
+    logger = utils.init_logger('autoct.template_command_syn_average')
     logger.info('Arguments: {}:{}:{}'.format(pattern, output, extra_args))
     files = glob(pattern or '')
 

@@ -4,7 +4,7 @@ from glob import glob
 
 from . import utils
 
-logger = utils.init_logger('tbi.segmentation')
+logger = utils.init_logger('autoct.segmentation')
 
 __mat_suffixes = {'Affine': '_preprocessed_affine2Syn0GenericAffine.mat',
                   'Physical': '_preprocessed_SyN0GenericAffine.mat'}

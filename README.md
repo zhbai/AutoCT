@@ -1,4 +1,4 @@
-# TBI Registration:
+# AutoCT:
 
 ## Typical Workflow
 - Convert dcm files to nii.gz.
@@ -12,7 +12,7 @@
 ![png](docs/flowchart.png)
 
 ## Getting Started
-   - Build docker image and use jupyter to run illustration notebook or tbi GUI notebook.
+   - Build docker image and use jupyter to run illustration notebook or autoct GUI notebook.
       - Refer to [this document](./docs/docker.md) for a detailed description.
    - Running on NERSC:
       - Refer to [this document](./docs/nersc.md) for a detailed description.
@@ -23,7 +23,7 @@
 
 
 ```python
-tbi.convert(pattern='illustration_data/dcmfiles/*',
+autoct.convert(pattern='illustration_data/dcmfiles/*',
             out_dir=join(output, 'convert'), 
             use_dcm2niix=True)
 plot_images(join(output, 'convert', "*.nii.gz"))
@@ -42,10 +42,10 @@ plot_images(join(output, 'convert', "*.nii.gz"))
 
 
 ```python
-tbi.preprocessing(pattern=join(output, 'convert', '*.nii.gz'), 
+autoct.preprocessing(pattern=join(output, 'convert', '*.nii.gz'), 
                   out_dir=join(output, 'preprocessing'),
                   mni_file=mni_file)
-tbi.skull_strip(pattern=join(output, 'preprocessing', '*.nii.gz'),
+autoct.skull_strip(pattern=join(output, 'preprocessing', '*.nii.gz'),
                 out_dir=join(output, 'brains'))
 plot_images(join(output, 'brains', '*.nii.gz'))
 ```
@@ -63,14 +63,14 @@ plot_images(join(output, 'brains', '*.nii.gz'))
 
 
 ```python
-tbi.registration(pattern=join(output, 'brains', '*.nii.gz'), 
+autoct.registration(pattern=join(output, 'brains', '*.nii.gz'), 
                  out_dir=join(output, 'registration'), 
                  template=template_file,
-                 transforms=tbi.supported_registration_transforms())
-tbi.segmentation(pattern=join(output, 'registration', '*/*.nii.gz'), 
+                 transforms=autoct.supported_registration_transforms())
+autoct.segmentation(pattern=join(output, 'registration', '*/*.nii.gz'), 
                  out_dir=join(output, 'segmentation'), 
                  atlas=atlas_file,
-                 types=tbi.supported_segmentation_types())
+                 types=autoct.supported_segmentation_types())
 plot_images(join(output, 'segmentation', '*/*.nii.gz'))
 ```
 

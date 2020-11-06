@@ -1,7 +1,7 @@
 import numpy as np
 import nibabel as nib
 
-from tbi.image_utils import drop_img_dim, rescale_img, calibrate_img
+from autoct.image_utils import drop_img_dim, rescale_img, calibrate_img
 
 def test_drop_img():
     data = np.arange(5*7*23).reshape(7, 23, 1, 5, 1, 1)

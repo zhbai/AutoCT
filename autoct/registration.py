@@ -4,7 +4,7 @@ from glob import glob
 
 from . import utils
 
-logger = utils.init_logger('tbi.registration')
+logger = utils.init_logger('autoct.registration')
 
 __expected_pattern = '_brain.nii'
 __dir_names = {'s': 'SyN', 'a': 'Affine', 'so': 'Affine2SyN'}

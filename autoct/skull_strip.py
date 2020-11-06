@@ -4,7 +4,7 @@ from glob import glob
 
 from . import utils
 
-logger = utils.init_logger('tbi.skull_strip')
+logger = utils.init_logger('autoct.skull_strip')
 
 
 __suffix = '_brain.nii.gz'

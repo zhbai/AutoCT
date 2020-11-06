@@ -5,7 +5,7 @@ from glob import glob
 
 from . import utils
 
-logger = utils.init_logger('tbi.convert')
+logger = utils.init_logger('autoct.convert')
 
 
 def convert(pattern, out_dir, prefix='', use_dcm2niix=False):

@@ -4,7 +4,7 @@ from .skull_strip import skull_strip
 from .registration import registration 
 from .segmentation import segmentation 
 from .label_geometry_measures import label_geometry_measures
-from .image_intensity_stat import image_intensity_stat
+from .warp_intensity_stats import warp_intensity_stats
 from .utils import setup_logging
 from .utils import supported_registration_transforms
 from .utils import supported_segmentation_types

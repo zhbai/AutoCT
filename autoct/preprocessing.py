@@ -5,7 +5,7 @@ from glob import glob
 
 from . import utils 
 
-logger = utils.init_logger('tbi.preprocessing')
+logger = utils.init_logger('autoct.preprocessing')
 
 
 def __preprocessing(file, out_dir, mni_file):

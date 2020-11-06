@@ -5,12 +5,12 @@ from glob import glob
 
 from . import utils
 
-logger = utils.init_logger('tbi.image_intensity_stat')
+logger = utils.init_logger('autoct.warp_intensity_stats')
 
 __expected_pattern = 'affine2Syn1Warp.nii'
 
 
-def image_intensity_stat(pattern, out_dir, atlas):
+def warp_intensity_stats(pattern, out_dir, atlas):
     """Calculate statistics of warp image for each region of the brain.
 
      Parameters
@@ -70,5 +70,5 @@ def main(argv=None):
     argv = argv or sys.argv[1:]
     parser = utils.build_image_intensify_stat_arg_parser()
     args = parser.parse_args(argv)
-    code, _ = image_intensity_stat(args.input, args.output, args.atlas_file)
+    code, _ = warp_intensity_stats(args.input, args.output, args.atlas_file)
     sys.exit(code)

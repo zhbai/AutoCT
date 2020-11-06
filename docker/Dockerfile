@@ -131,25 +131,25 @@ ADD docker/fsl-5.0.10-bins.tar.gz /opt/fsl-5.0.10
 ADD docker/dcm2niix.tar.gz /opt/dcm2niix/bin
 ENV PATH="/opt/dcm2niix/bin:$PATH" 
 
-ARG tbi_user=tbi
-ARG tbi_uid=1000
+ARG autoct_user=autoct
+ARG autoct_uid=1000
 
 RUN groupadd \
-        --gid ${tbi_uid} \
-        ${tbi_user} && \
+        --gid ${autoct_uid} \
+        ${autoct_user} && \
     useradd \
         --comment "TBI User" \
         --create-home \
-        --gid ${tbi_uid} \
-        --uid ${tbi_uid} \
+        --gid ${autoct_uid} \
+        --uid ${autoct_uid} \
         --no-log-init \
         --shell /bin/bash \
-        ${tbi_user}
+        ${autoct_user}
 #####
 # Installing python packages.
 ###
 ADD setup.py /build_dir/
-ADD tbi /build_dir/tbi
+ADD autoct /build_dir/autoct
 
 RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel \
     && python3 -m pip install --no-cache-dir /build_dir \
@@ -157,8 +157,8 @@ RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel \
     && jupyter nbextension enable --py widgetsnbextension
 
 ADD notebooks /notebooks
-RUN chown -R ${tbi_user}:${tbi_uid} /notebooks 
+RUN chown -R ${autoct_user}:${autoct_uid} /notebooks 
 
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
-USER ${tbi_user}
+USER ${autoct_user}
 WORKDIR /notebooks

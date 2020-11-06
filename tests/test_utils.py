@@ -1,4 +1,4 @@
-from tbi import utils
+from autoct import utils
 
 
 def test_replace():

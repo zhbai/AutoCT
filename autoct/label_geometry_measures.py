@@ -5,7 +5,7 @@ from glob import glob
 
 from . import utils
 
-logger = utils.init_logger('tbi.label_geometry_measures')
+logger = utils.init_logger('autoct.label_geometry_measures')
 
 __expected_patterns = ['_segmentation_cortical_affine.nii', '_segmentation_cortical_phy.nii']
 

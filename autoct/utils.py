@@ -1,7 +1,7 @@
 import logging
 import os
 
-logger = logging.getLogger('tbi.utils')
+logger = logging.getLogger('autoct.utils')
 
 _LOGGER_SETUP = False
 
@@ -27,7 +27,7 @@ def init_logger(name):
 
 
 def _get_default_level():
-    return os.environ.get('TBI_LOG_LEVEL', logging.INFO)
+    return os.environ.get('AUTOCT_LOG_LEVEL', logging.INFO)
 
 
 def setup_logging(level=None):
@@ -52,7 +52,7 @@ def setup_logging(level=None):
             }
         },
         'loggers': {
-            'tbi': {
+            'autoct': {
                 'handlers': ['console'],
                 'level': level,
                 'propagate': True
@@ -85,9 +85,9 @@ def build_convert_arg_parser():
            '\n'
            'Examples:'
            '\n'
-           "      tbi-convert 'dcmfiles/*' convert"
+           "      autoct-convert 'dcmfiles/*' convert"
            '\n'
-           "      tbi-convert --use-dcm2niix 'dcmfiles/*' convert"
+           "      autoct-convert --use-dcm2niix 'dcmfiles/*' convert"
            '\n'
     )
 
@@ -107,7 +107,7 @@ def build_pre_processing_arg_parser():
            '\n'
            'Example:'
            '\n'
-           "      tbi-preprocessing -m MNI152_T1_1mm_brain.nii.gz 'convert/*.nii.gz' preprocessing"
+           "      autoct-preprocessing -m MNI152_T1_1mm_brain.nii.gz 'convert/*.nii.gz' preprocessing"
            '\n'
     )
 
@@ -125,7 +125,7 @@ def build_skull_strip_arg_parser():
            '\n'
            'Example:'
            '\n'
-           "      tbi-skull-strip  'preprocessing/*.nii.gz' brains"
+           "      autoct-skull-strip  'preprocessing/*.nii.gz' brains"
            '\n'
     )
 
@@ -147,9 +147,9 @@ def build_template_command_syn_average_arg_parser():
            '\n'
            'Examples:'
            '\n'
-           "      tbi-template-command-syn-average 'brains/*.nii.gz' template_output"
+           "      autoct-template-command-syn-average 'brains/*.nii.gz' template_output"
            '\n'
-           "      tbi-template-command-syn-average -e '-i 5' 'brains/*.nii.gz' template_output"
+           "      autoct-template-command-syn-average -e '-i 5' 'brains/*.nii.gz' template_output"
            '\n'
     )
 
@@ -181,9 +181,9 @@ def build_registration_arg_parser():
            '\n'
            'Examples:'
            '\n'
-           "      tbi-registration -T a so -t T_template0.nii.gz  'brains/*.nii.gz' registration"
+           "      autoct-registration -T a so -t T_template0.nii.gz  'brains/*.nii.gz' registration"
            '\n'
-           "      tbi-registration -T s -t T_template0.nii.gz  'brains/*.nii.gz' registration"
+           "      autoct-registration -T s -t T_template0.nii.gz  'brains/*.nii.gz' registration"
            '\n'
     )
 
@@ -214,10 +214,10 @@ def build_segmentation_arg_parser():
            '\n'
            'Examples:'
            '\n'
-           "    tbi-segmentation -T Physical -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'" 
+           "    autoct-segmentation -T Physical -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'" 
            " segmentation"
            '\n'
-           "    tbi-segmentation -T Affine, Physical -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'"
+           "    autoct-segmentation -T Affine, Physical -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'"
            " segmentation"
            '\n'
     )
@@ -239,7 +239,7 @@ def build_label_geometry_measures_arg_parser():
            '\n'
            'Example:'
            '\n'
-           "      tbi-label-geometry-measures 'segmentation/*/*.nii.gz' label-geometry-measures"
+           "      autoct-label-geometry-measures 'segmentation/*/*.nii.gz' label-geometry-measures"
            '\n'
     )
 
@@ -256,8 +256,8 @@ def build_image_intensify_stat_arg_parser():
         '\n'
         'Example:'
         '\n'
-        "      tbi-image-intensity-stat -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'"
-        " image_intensity_stat"
+        "      autoct-warp_intensity_stats -a New_atlas_cort_asym_sub.nii.gz 'registration/*/*.nii.gz'"
+        " warp_intensity_stats"
         '\n'
     )
 

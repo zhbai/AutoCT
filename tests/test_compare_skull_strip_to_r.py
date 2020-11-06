@@ -1,7 +1,7 @@
 import os.path
 import pytest
 
-import tbi
+import autoct
 
 
 def input_dir():
@@ -51,7 +51,7 @@ def skull_strip_output_dir():
 
 
 def test_skull_strip(skull_strip_input, skull_strip_output_dir):
-    tbi.skull_strip(skull_strip_input, skull_strip_output_dir)
+    autoct.skull_strip(skull_strip_input, skull_strip_output_dir)
 
     # File generated using R code
     skull_strip_expected = os.path.join(input_dir(), 'expected', 'skull_strip', skull_strip_filename())

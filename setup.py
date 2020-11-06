@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='tbi_registration',
+    name='autoct_registration',
     version='0.1.0',
     include_package_data=True,
     url='https://bitbucket.org/LBL_TBI/tbi_registration/',
-    author='Author Name',
-    author_email='author@gmail.com',
+    author='Zhe Bai, Abdelilah Essiari',
+    author_email='zhebai@lbl.gov, aessiari@lbl.gov',
     description='Description of my package',
     packages=find_packages(),    
     install_requires=[
@@ -21,14 +21,14 @@ setup(
     ],
     entry_points={
        'console_scripts': [
-              'tbi-convert = tbi.convert:main',
-              'tbi-preprocessing = tbi.preprocessing:main',
-              'tbi-skull-strip = tbi.skull_strip:main',
-              'tbi-template-command-syn-average = tbi.template_command_syn_average:main',
-              'tbi-registration = tbi.registration:main',
-              'tbi-segmentation = tbi.segmentation:main',
-              'tbi-image-intensity-stat = tbi.image_intensity_stat:main',
-              'tbi-label-geometry-measures = tbi.label_geometry_measures:main'
+              'autoct-convert = autoct.convert:main',
+              'autoct-preprocessing = autoct.preprocessing:main',
+              'autoct-skull-strip = autoct.skull_strip:main',
+              'autoct-template-command-syn-average = autoct.template_command_syn_average:main',
+              'autoct-registration = autoct.registration:main',
+              'autoct-segmentation = autoct.segmentation:main',
+              'autoct-warp-intensity-stats = autoct.warp_intensity_stats:main',
+              'autoct-label-geometry-measures = autoct.label_geometry_measures:main'
        ]
     },
 )

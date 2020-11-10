@@ -26,7 +26,7 @@ jobs:
             #docker run --rm -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests
         no_output_timeout: 40m
 
-     - store_test_test-results:
+     - store_test-results:
         path: test-results
 
      - store_artifacts:

@@ -17,10 +17,9 @@ jobs:
             cat <<EOF > coverage.sh |
             #!/bin/bash
             pip install coverage \
-            && export PATH=~/.local/bin:$PATH \
-            && coverage run -m pytest --junitxml=test-results/junit.xml tests \
-            && coverage report \
-            && coverage html -d test-results
+            && /home/autoct/.local/bin/coverage run -m pytest --junitxml=test-results/junit.xml tests \
+            && /home/autoct/.local/bin/coverage report \
+            && /home/autoct/.local/bin/coverage html -d test-results
             EOF
             chmod 777 coverage.sh
             docker run --rm -v $(pwd):/testing -w /testing  -it autoct:$CIRCLE_BRANCH ./coverage.sh

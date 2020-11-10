@@ -18,7 +18,7 @@ jobs:
             pip install coverage \
             && export PATH=~/.local/bin:$PATH \
             && coverage run -m pytest --junitxml=test-results/junit.xml tests/test_utils.py \
-            && coverage report 
+            && coverage report \
             && coverage html -d test-results
             EOF
             chmod 777 coverage.sh

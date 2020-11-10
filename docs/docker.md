@@ -25,7 +25,7 @@ cd tbi_registration
     - Python (3.7.8)
     - ANTs (2.3.1)
     - FSL (5.0.10)
-    - AFNI (latest)
+    - AFNI (20.3.01)
 
 ```sh
 docker build -f docker/Dockerfile -t autoct:1.0 .

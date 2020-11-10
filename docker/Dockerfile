@@ -57,8 +57,8 @@ RUN echo "Installing  ANTs ..." \
 
 ADD docker/ants-2.3.1-bins.tar.gz /opt/ants-2.3.1
 
-ENV PATH="/opt/afni-latest:$PATH" \
-    AFNI_PLUGINPATH="/opt/afni-latest"
+ENV PATH="/opt/afni-20.3.01:$PATH" \
+    AFNI_PLUGINPATH="/opt/afni-20.3.01"
 RUN apt-get update -qq \
     && apt-get install -y -q --no-install-recommends \
            ed \
@@ -91,7 +91,7 @@ RUN apt-get update -qq \
     fi \
     && ldconfig 
 
-ADD docker/afni-latest-bins.tar.gz /opt/afni-latest
+ADD docker/afni-20.3.01-bins.tar.gz /opt/afni-20.3.01
 
 ENV FSLDIR="/opt/fsl-5.0.10" \
     PATH="/opt/fsl-5.0.10/bin:$PATH" \

@@ -7,5 +7,8 @@ jobs:
      # build the application image
      - run: docker build -f docker/Dockerfile -t autoct:$CIRCLE_BRANCH .
      # run tests 
-     - run: docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest tests
+     - run: 
+        name: Running Tests
+        command: docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest tests 
+        no_output_timeout: 30m
 

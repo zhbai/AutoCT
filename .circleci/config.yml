@@ -17,7 +17,7 @@ jobs:
         command: |
             mkdir test-results
             ls -ld test-results
-            #chmod -R 666 test-results
+            chmod 777 test-results
             touch test-results/file.txt
             #docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests 
             #docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests/test_compare_skull_strip_to_r.py

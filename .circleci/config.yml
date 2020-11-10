@@ -4,22 +4,16 @@ jobs:
    machine: true
    steps:
      - checkout
-     # build the application image
      - run: 
         name: Build image 
         command: |
             docker build -f docker/Dockerfile -t autoct:$CIRCLE_BRANCH .
-     # run tests 
      - run: 
         name: Run Tests
         command: |
             mkdir test-results
             chmod 777 test-results
-            touch test-results/file.txt
-            ls -ld test-results
-            ls -l test-results/
-            #docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests 
-            docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests/test_compare_skull_strip_to_r.py
+            docker run --rm -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests 
         no_output_timeout: 40m
 
      - store_test_results:
@@ -27,4 +21,3 @@ jobs:
 
      - store_artifacts:
         path: test-results 
-

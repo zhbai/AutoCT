@@ -6,3 +6,6 @@ jobs:
      - checkout
      # build the application image
      - run: docker build -f docker/Dockerfile -t autoct:$CIRCLE_BRANCH .
+     # run tests 
+     - run: docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest tests
+

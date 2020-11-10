@@ -13,10 +13,20 @@ jobs:
         command: |
             mkdir test-results
             chmod 777 test-results
-            docker run --rm -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests 
+            cat <<EOF > coverage.sh |
+            #!/bin/bash
+            pip install coverage \
+            && export PATH=~/.local/bin:$PATH \
+            && coverage run -m pytest --junitxml=test-results/junit.xml tests/test_utils.py \
+            && coverage report 
+            && coverage html -d test-results
+            EOF
+            chmod 777 coverage.sh
+            docker run --rm -v $(pwd):/testing -w /testing  -it autoct:$CIRCLE_BRANCH ./coverage.sh
+            #docker run --rm -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests
         no_output_timeout: 40m
 
-     - store_test_results:
+     - store_test_test-results:
         path: test-results
 
      - store_artifacts:

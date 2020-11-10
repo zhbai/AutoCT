@@ -12,6 +12,7 @@ jobs:
         name: Run Tests
         command: |
             mkdir test-results
+            chmod 777 .
             chmod 777 test-results
             cat <<EOF > coverage.sh |
             #!/bin/bash

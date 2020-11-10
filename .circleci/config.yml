@@ -8,7 +8,15 @@ jobs:
      - run: docker build -f docker/Dockerfile -t autoct:$CIRCLE_BRANCH .
      # run tests 
      - run: 
-        name: Running Tests
-        command: docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest tests 
+        name: Run Tests
+        command: |
+            mkdir test-results
+            docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests 
         no_output_timeout: 30m
+
+     - store_test_results:
+        path: test-results
+
+     - store_artifacts:
+        path: test-results 
 

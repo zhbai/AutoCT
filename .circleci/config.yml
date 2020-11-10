@@ -5,13 +5,19 @@ jobs:
    steps:
      - checkout
      # build the application image
-     - run: docker build -f docker/Dockerfile -t autoct:$CIRCLE_BRANCH .
+     - run: 
+        name: Build image 
+        command: |
+            #docker build -f docker/Dockerfile -t autoct:$CIRCLE_BRANCH .
+            ls -l
+            pwd
      # run tests 
      - run: 
         name: Run Tests
         command: |
             mkdir test-results
-            chmod -R 666 test-results
+            ls -ld test-results
+            #chmod -R 666 test-results
             touch test-results/file.txt
             #docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests 
             #docker run --rm  -v $(pwd):/testing -w /testing -it autoct:$CIRCLE_BRANCH pytest --junitxml=test-results/junit.xml tests/test_compare_skull_strip_to_r.py

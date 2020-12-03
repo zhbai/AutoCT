@@ -13,37 +13,37 @@ def test_workflow():
     template_file = 'notebooks/illustration_data/T_template0.nii.gz'
 
     ret, _ = autoct.convert(pattern='notebooks/illustration_data/dcmfiles/*',
-                            out_dir=join(output, 'convert'),
+                            out_dir=output,
                             use_dcm2niix=True)
     assert ret == 0, 'convert failed'
 
-    ret, _ = autoct.preprocessing(pattern=join(output, 'convert', '*.nii.gz'),
-                                  out_dir=join(output, 'preprocessing'),
+    ret, _ = autoct.preprocessing(pattern=join(output, '*', 'convert', '*.nii.gz'),
+                                  out_dir=output,
                                   mni_file=mni_file)
     assert ret == 0, 'preprocessing failed'
 
-    ret, _ = autoct.skull_strip(pattern=join(output, 'preprocessing', '*.nii.gz'),
-                                out_dir=join(output, 'brains'))
+    ret, _ = autoct.skull_strip(pattern=join(output, '*', 'preprocessing', '*.nii.gz'),
+                                out_dir=output)
     assert ret == 0, 'skull_strip failed'
 
-    ret, _ = autoct.registration(pattern=join(output, 'brains', '*.nii.gz'),
-                                 out_dir=join(output, 'registration'),
+    ret, _ = autoct.registration(pattern=join(output, '*', 'skull_strip', '*.nii.gz'),
+                                 out_dir=output,
                                  template=template_file,
                                  transforms=autoct.supported_registration_transforms())
     assert ret == 0, 'registration failed'
 
-    ret, _ = autoct.segmentation(pattern=join(output, 'registration', '*/*.nii.gz'),
-                                 out_dir=join(output, 'segmentation'),
+    ret, _ = autoct.segmentation(pattern=join(output, '*', 'registration', '*/*.nii.gz'),
+                                 out_dir=output,
                                  atlas=atlas_file,
                                  types=autoct.supported_segmentation_types())
 
     assert ret == 0, 'segmentation failed'
 
-    ret, _ = autoct.label_geometry_measures(pattern=join(output, 'segmentation', '*/*.nii.gz'),
-                                            out_dir=join(output, 'label_geometry_measures'))
+    ret, _ = autoct.label_geometry_measures(pattern=join(output, '*', 'segmentation', '*/*.nii.gz'),
+                                            out_dir=output)
     assert ret == 0, 'label_geometry_measures failed'
 
-    ret, _ = autoct.warp_intensity_stats(pattern=join(output, 'registration', '*/*.nii.gz'),
-                                         out_dir=join(output, 'warp_intensity_stats'),
+    ret, _ = autoct.warp_intensity_stats(pattern=join(output, '*', 'registration', '*/*.nii.gz'),
+                                         out_dir=output,
                                          atlas=atlas_file)
     assert ret == 0, 'warp_intensity_stats failed'

@@ -31,29 +31,21 @@ def skull_strip_filename():
 
 
 @pytest.fixture
-def template_file():
-    return os.path.join(input_dir(), 'T_template0.nii.gz')
-
-
-@pytest.fixture
-def atlas_file():
-    return os.path.join(input_dir(), 'New_atlas_cort_asym.nii.gz')
-
-
-@pytest.fixture
 def skull_strip_input():
     return os.path.join(input_dir(), 'ID_0ead008d-ecef2edb6b_normalizedWarped.nii.gz')
 
 
-@pytest.fixture
-def skull_strip_output_dir():
-    return os.path.join(output_dir(), 'brains')
-
-
-def test_skull_strip(skull_strip_input, skull_strip_output_dir):
-    autoct.skull_strip(skull_strip_input, skull_strip_output_dir)
+def test_skull_strip(skull_strip_input):
+    autoct.skull_strip(skull_strip_input, output_dir())
 
     # File generated using R code
     skull_strip_expected = os.path.join(input_dir(), 'expected', 'skull_strip', skull_strip_filename())
-    skull_strip_output_file = os.path.join(skull_strip_output_dir, skull_strip_filename())
+
+    from autoct import utils
+
+    prefix = utils.prefix(skull_strip_input, '_normalizedWarped.nii')
+    skull_strip_output_file = os.path.join(output_dir(), 
+                                           prefix, 
+                                           'skull_strip', 
+                                           skull_strip_filename())
     assert compare_images(skull_strip_expected, skull_strip_output_file)

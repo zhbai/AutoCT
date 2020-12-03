@@ -8,6 +8,7 @@ from . import utils
 logger = utils.init_logger('autoct.label_geometry_measures')
 
 __expected_patterns = ['_segmentation_cortical_affine.nii', '_segmentation_cortical_phy.nii']
+__prefix_pattern = '_segmentation_cortical_'
 
 
 def label_geometry_measures(pattern, out_dir):
@@ -51,7 +52,10 @@ def label_geometry_measures(pattern, out_dir):
         try:
             logger.info("Processing file name:  {}".format(file))
             output_name = utils.prefix(file, '.nii')
-            txt_file = os.path.join(out_dir, output_name + '.txt')
+            prefix = utils.prefix(output_name, __prefix_pattern)
+            geometry_measures_dir = os.path.join(out_dir, prefix, 'label_geometry_measures')
+            os.makedirs(geometry_measures_dir, exist_ok=True)
+            txt_file = os.path.join(geometry_measures_dir, output_name + '.txt')
             logger.info("Saving to file name: {}".format(txt_file))
             utils.execute('LabelGeometryMeasures {} {} > {}'.format(3, file, txt_file))
             df = pd.read_csv(txt_file,
@@ -59,7 +63,7 @@ def label_geometry_measures(pattern, out_dir):
                              engine='python',
                              index_col=0, skiprows=[0], header=None, names=names.split(','))
 
-            csv_file = os.path.join(out_dir, output_name + '.csv')
+            csv_file = os.path.join(geometry_measures_dir, output_name + '.csv')
             logger.info("Saving to csv file name: {}".format(csv_file))
             df.to_csv(csv_file, encoding='utf-8')
             count += 1

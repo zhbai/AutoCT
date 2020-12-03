@@ -24,12 +24,12 @@
 
 ```python
 autoct.convert(pattern='illustration_data/dcmfiles/*',
-            out_dir=join(output, 'convert'), 
+            out_dir=output, 
             use_dcm2niix=True)
-plot_images(join(output, 'convert', "*.nii.gz"))
+plot_images(join(output, '*', 'convert', "*.nii.gz"))
 ```
 
-    Plotting /data/illustration_workflow_output/convert/ID_0eba6ca7-7473dee7c1.nii.gz:shape=(512, 512, 35)
+    Plotting output/ID_0eba6ca7-7473dee7c1/convert/ID_0eba6ca7-7473dee7c1.nii.gz:shape=(512, 512, 35)
 
 
 
@@ -42,15 +42,15 @@ plot_images(join(output, 'convert', "*.nii.gz"))
 
 
 ```python
-autoct.preprocessing(pattern=join(output, 'convert', '*.nii.gz'), 
-                  out_dir=join(output, 'preprocessing'),
+autoct.preprocessing(pattern=join(output, '*', 'convert', '*.nii.gz'), 
+                  out_dir=output,
                   mni_file=mni_file)
-autoct.skull_strip(pattern=join(output, 'preprocessing', '*.nii.gz'),
-                out_dir=join(output, 'brains'))
-plot_images(join(output, 'brains', '*.nii.gz'))
+autoct.skull_strip(pattern=join(output, '*', 'preprocessing', '*.nii.gz'),
+                out_dir=output)
+plot_images(join(output, '*', 'skull_strip', '*.nii.gz'))
 ```
 
-    Plotting /data/illustration_workflow_output/brains/ID_0eba6ca7-7473dee7c1_brain.nii.gz:shape=(182, 218, 182)
+    Plotting output/ID_0eba6ca7-7473dee7c1/skull_strip/ID_0eba6ca7-7473dee7c1_brain.nii.gz:shape=(182, 218, 182)
 
 
 
@@ -63,18 +63,18 @@ plot_images(join(output, 'brains', '*.nii.gz'))
 
 
 ```python
-autoct.registration(pattern=join(output, 'brains', '*.nii.gz'), 
-                 out_dir=join(output, 'registration'), 
+autoct.registration(pattern=join(output, '*', 'skull_strip', '*.nii.gz'), 
+                 out_dir=output, 
                  template=template_file,
                  transforms=autoct.supported_registration_transforms())
-autoct.segmentation(pattern=join(output, 'registration', '*/*.nii.gz'), 
-                 out_dir=join(output, 'segmentation'), 
+autoct.segmentation(pattern=join(output, '*', 'registration', '*/*.nii.gz'), 
+                 out_dir=output, 
                  atlas=atlas_file,
                  types=autoct.supported_segmentation_types())
-plot_images(join(output, 'segmentation', '*/*.nii.gz'))
+plot_images(join(output, '*', 'segmentation', '*/*.nii.gz'))
 ```
 
-    Plotting /data/illustration_workflow_output/segmentation/PHYSCi/ID_0eba6ca7-7473dee7c1_segmentation_cortical_phy.nii.gz:shape=(182, 218, 182)
+    Plotting output/ID_0eba6ca7-7473dee7c1/segmentation/PHYSCi/ID_0eba6ca7-7473dee7c1_segmentation_cortical_phy.nii.gz:shape=(182, 218, 182)
 
 
 
@@ -83,7 +83,7 @@ plot_images(join(output, 'segmentation', '*/*.nii.gz'))
     
 
 
-    Plotting /data/illustration_workflow_output/segmentation/AFFINE/ID_0eba6ca7-7473dee7c1_segmentation_cortical_affine.nii.gz:shape=(182, 218, 182)
+    Plotting output/ID_0eba6ca7-7473dee7c1/segmentation/AFFINE/ID_0eba6ca7-7473dee7c1_segmentation_cortical_affine.nii.gz:shape=(182, 218, 182)
 
 
 

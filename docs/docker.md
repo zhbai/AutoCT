@@ -88,23 +88,23 @@ Also note: the `--rm` option means the container `autoct-reg` would automaticall
 docker run --rm --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.0 /bin/bash
 
 ## Inside container:
-autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output/convert
+autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output
 
-autoct-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/convert/*.nii.gz' \
-     /data/output/preprocessing
+autoct-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
+     /data/output
 
-autoct-skull-strip '/data/output/preprocessing/*.nii.gz' /data/output/skull-strip
+autoct-skull-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
 
 autoct-registration -t illustration_data/T_template0.nii.gz \
-  '/data/output/skull-strip/*.nii.gz'  /data/output/registration
+  '/data/output/*/skull_strip/*.nii.gz' /data/output
 
 autoct-segmentation -a illustration_data/New_atlas_cort_asym_sub.nii.gz  \
-  '/data/output/registration/*/*.nii.gz'  /data/output/segmentation
+  '/data/output/*/registration/*/*.nii.gz' /data/output
 
-autoct-label-geometry-measures '/data/output/segmentation/*/*.nii.gz' /data/output/geometry_measures
+autoct-label-geometry-measures '/data/output/*/segmentation/*/*.nii.gz' /data/output
 
-autoct-warp-intensity-stats -a  illustration_data/New_atlas_cort_asym_sub.nii.gz \
-   '/data/output/registration/*/*.nii.gz' /data/output/intensity_stats
+autoct-warp-intensity-stats -a illustration_data/New_atlas_cort_asym_sub.nii.gz \
+   '/data/output/*/registration/*/*.nii.gz' /data/output
 ```
 
 ### Running Example Jupyter Notebook

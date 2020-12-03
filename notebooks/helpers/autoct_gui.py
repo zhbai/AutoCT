@@ -116,55 +116,55 @@ class Inputs:
 
     @classmethod
     def convert_output_dir(cls):
-        return join(cls.outdir(), 'convert')
+        return cls.outdir()
 
     @classmethod
     def preprocessing_input_pattern(cls, pattern='*.nii.gz'):
-        return join(cls.convert_output_dir(), pattern)
+        return join(cls.convert_output_dir(), '*', 'convert' , pattern)
 
     @classmethod
     def preprocessing_output_dir(cls):
-        return join(cls.outdir(), 'preprocessing')
+        return cls.outdir()
 
     @classmethod
-    def skull_strip_input_pattern(cls, pattern='*_normalizedWarped.nii.gz'):
-        return join(cls.preprocessing_output_dir(), pattern)
+    def skull_strip_input_pattern(cls, pattern='*.nii.gz'):
+        return join(cls.preprocessing_output_dir(), '*', 'preprocessing', pattern)
 
     @classmethod
     def skull_strip_output_dir(cls):
-        return join(cls.outdir(), 'brains')
+        return cls.outdir()
 
     @classmethod
     def registration_input_pattern(cls, pattern='*.nii.gz'):
-        return join(cls.skull_strip_output_dir(), pattern)
+        return join(cls.skull_strip_output_dir(), '*', 'skull_strip', pattern)
 
     @classmethod
     def registration_output_dir(cls):
-        return join(cls.outdir(), 'registration')
+        return cls.outdir()
 
     @classmethod
     def segmentation_input_pattern(cls, pattern='*/*.nii.gz'):
-        return join(cls.registration_output_dir(), pattern)
+        return join(cls.registration_output_dir(), '*', 'registration', pattern)
 
     @classmethod
     def segmentation_output_dir(cls):
-        return join(cls.outdir(), 'segmentation')
+        return cls.outdir()
 
     @classmethod
     def geo_input_pattern(cls, pattern='*/*.nii.gz'):
-        return join(cls.segmentation_output_dir(), pattern)
+        return join(cls.segmentation_output_dir(), '*', 'segmentation', pattern)
 
     @classmethod
     def geo_output_dir(cls):
-        return join(cls.outdir(), 'label_geometry_measures')
+        return cls.outdir()
 
     @classmethod
     def stat_input_pattern(cls, pattern='Affine2SyN/*affine2Syn1Warp.nii.gz'):
-        return join(cls.registration_output_dir(), pattern)
+        return join(cls.registration_output_dir(), '*', 'registration', pattern)
 
     @classmethod
     def stat_output_dir(cls):
-        return join(cls.outdir(), 'warp_intensity_stats')
+        return cls.outdir()
 
 
 def create_html(text, layout=widgets.Layout(height='100px', width='90%', size='10')):
@@ -427,7 +427,7 @@ def create_convert_box(output, header):
     show_button = widgets.Button(description="Show", button_style='info')
     state = (output, pattern_textfield, checkbox, outdir_textfield)
     run_button.on_click(partial(run_convert, *state))
-    show_button.on_click(partial(show_images, output, '*.nii.gz', outdir_textfield))
+    show_button.on_click(partial(show_images, output, '*/convert/*.nii.gz', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, box3, button_box)
@@ -444,7 +444,7 @@ def create_preprocessing_box(output, header):
     show_button = widgets.Button(description='Show', button_style='info')
     state = (output, mni_textfield, pattern_textfield, outdir_textfield)
     run_button.on_click(partial(run_preprocessing, *state))
-    show_button.on_click(partial(show_images, output, '*.nii.gz', outdir_textfield))
+    show_button.on_click(partial(show_images, output, '*/preprocessing/*.nii.gz', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, box3, button_box)
@@ -460,7 +460,7 @@ def create_skull_strip_box(output, header):
     show_button = widgets.Button(description="Show", button_style='info')
     state = (output, pattern_textfield, outdir_textfield)
     run_button.on_click(partial(run_skull_strip, *state))
-    show_button.on_click(partial(show_images, output, '*.nii.gz', outdir_textfield))
+    show_button.on_click(partial(show_images, output, '*/skull_strip/*.nii.gz', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, button_box)
@@ -478,7 +478,7 @@ def create_registration_box(output, header):
     show_button = widgets.Button(description='Show', button_style='info')
     state = (output, template_textfield, checkboxes, pattern_textfield, outdir_textfield)
     run_button.on_click(partial(run_registration, *state))
-    show_button.on_click(partial(show_images, output, '*/*.nii.gz', outdir_textfield))
+    show_button.on_click(partial(show_images, output, '*/registration/*/*.nii.gz', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, box3, box4, button_box)
@@ -496,7 +496,7 @@ def create_segmentation_box(output, header):
     show_button = widgets.Button(description='Show', button_style='info')
     state = (output, atlas_textfield, checkboxes, pattern_textfield, outdir_textfield)
     run_button.on_click(partial(run_segmentation, *state))
-    show_button.on_click(partial(show_images, output, '*/*.nii.gz', outdir_textfield))
+    show_button.on_click(partial(show_images, output, '*/segmentation/*/*.nii.gz', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, box3, box4, button_box)
@@ -511,7 +511,7 @@ def create_geo_box(output, header):
     show_button = widgets.Button(description="Show", button_style='info')
     state = (output, pattern_textfield, outdir_textfield)
     run_button.on_click(partial(run_label_geometry_measures, *state))
-    show_button.on_click(partial(show_csv, output, '*.csv', outdir_textfield))
+    show_button.on_click(partial(show_csv, output, '*/label_geometry_measures/*.csv', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, button_box)
@@ -527,7 +527,7 @@ def create_stat_box(output, header):
     show_button = widgets.Button(description='Show', button_style='info')
     state = (output, atlas_textfield, pattern_textfield, outdir_textfield)
     run_button.on_click(partial(run_intensity_stat, *state))
-    show_button.on_click(partial(show_csv, output, '*.csv', outdir_textfield))
+    show_button.on_click(partial(show_csv, output, '*/warp_intensity_stats/*.csv', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, box3, button_box)

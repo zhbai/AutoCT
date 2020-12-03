@@ -15,13 +15,14 @@ def __registration(file, out_dir, template, transform):
     logger.info('Processing {}:{}'.format(transform, file))
     output_name = utils.prefix(file, __expected_pattern)
 
-    out_file = os.path.join(out_dir,
+    registration_dir = os.path.join(out_dir, output_name, 'registration')
+    out_file = os.path.join(registration_dir,
                             __dir_names[transform],
                             output_name + '_preprocessed_' + __labels[transform])
     os.makedirs(os.path.dirname(out_file), exist_ok=True)
 
     if transform == 'so':
-        warp_file = os.path.join(out_dir,
+        warp_file = os.path.join(registration_dir,
                                  __dir_names['a'],
                                  output_name + '_preprocessed_' + __labels['a'] + 'Warped.nii.gz')
 

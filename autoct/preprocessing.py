@@ -24,7 +24,10 @@ def __preprocessing(file, out_dir, mni_file):
     out4file = os.path.join(temp.name, 'corrected.nii.gz')
     utils.execute('N4BiasFieldCorrection -d 3 -i {} -o {}'.format(out3file, out4file))
 
-    out_file = os.path.join(out_dir, utils.prefix(file, '.nii'))
+    prefix = utils.prefix(file, '.nii')
+    preprocessing_dir = os.path.join(out_dir, prefix, 'preprocessing') 
+    os.makedirs(preprocessing_dir, exist_ok=True)
+    out_file = os.path.join(preprocessing_dir, prefix)
     fmt = '{} -d 3 -n 3 -f {} -m {} -o {}_normalized -t a'
     cmd = 'antsRegistrationSyN.sh'
     utils.execute(fmt.format(cmd, mni_file, out4file, out_file))

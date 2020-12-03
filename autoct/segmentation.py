@@ -38,7 +38,8 @@ def __segmentation(file, out_dir, atlas, seg_type):
     else:
         reference_file = file
 
-    out_file = os.path.join(out_dir, __dir_names[seg_type], output_name + __out_suffixes[seg_type])
+    segmentation_dir = os.path.join(out_dir, output_name, 'segmentation')
+    out_file = os.path.join(segmentation_dir, __dir_names[seg_type], output_name + __out_suffixes[seg_type])
     os.makedirs(os.path.dirname(out_file), exist_ok=True)
     transforms = '[' + mat_file + ',1] ' + file
     fmt = '{} -f 0 -d 3 -n GenericLabel[Linear] -i {} -o {} -r {} -t {}'

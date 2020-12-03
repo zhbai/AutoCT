@@ -7,7 +7,7 @@ from . import utils
 
 logger = utils.init_logger('autoct.warp_intensity_stats')
 
-__expected_pattern = 'affine2Syn1Warp.nii'
+__expected_pattern = '_preprocessed_affine2Syn1Warp.nii'
 
 
 def warp_intensity_stats(pattern, out_dir, atlas):
@@ -51,10 +51,13 @@ def warp_intensity_stats(pattern, out_dir, atlas):
         try:
             logger.info('Processing {}'.format(file))
             output_name = utils.prefix(file, '.nii')
-            txt_file = os.path.join(out_dir, output_name + '.txt')
+            prefix = utils.prefix(file, __expected_pattern)
+            intensity_stats_dir = os.path.join(out_dir, prefix, 'warp_intensity_stats')
+            os.makedirs(intensity_stats_dir, exist_ok=True)
+            txt_file = os.path.join(intensity_stats_dir, output_name + '.txt')
             utils.execute('ImageIntensityStatistics {} {} {} > {}'.format(3, file, atlas, txt_file))
             df = pd.read_csv(txt_file, sep=' +', engine='python', index_col=0)
-            csv_file = os.path.join(out_dir, output_name + '.csv')
+            csv_file = os.path.join(intensity_stats_dir, output_name + '.csv')
             df.to_csv(csv_file, encoding='utf-8')
             logger.info("Saved to csv file name: {}".format(csv_file))
             count += 1

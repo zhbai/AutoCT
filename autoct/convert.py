@@ -59,11 +59,13 @@ def convert(pattern, out_dir, prefix='', use_dcm2niix=False):
         if prefix:
             output_name = prefix + '_' + output_name
 
-        output_file = os.path.join(out_dir, output_name + ".nii.gz")
-
         try:
+            convert_dir = os.path.join(out_dir, output_name, 'convert')
+            os.makedirs(convert_dir, exist_ok=True)
+            output_file = os.path.join(convert_dir, output_name + ".nii.gz")
+
             if use_dcm2niix:
-                cmd = 'dcm2niix -w 1 -z y -o {} -f {} {}'.format(out_dir, output_name, folder)
+                cmd = 'dcm2niix -w 1 -z y -o {} -f {} {}'.format(convert_dir, output_name, folder)
                 utils.execute(cmd)
             else:
                 dicom2nifti.dicom_series_to_nifti(folder, output_file, reorient_nifti=True)

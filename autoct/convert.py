@@ -65,8 +65,13 @@ def convert(pattern, out_dir, prefix='', use_dcm2niix=False):
             output_file = os.path.join(convert_dir, output_name + ".nii.gz")
 
             if use_dcm2niix:
-                cmd = 'dcm2niix -w 1 -z y -o {} -f {} {}'.format(convert_dir, output_name, folder)
+                import tempfile
+                import shutil
+
+                temp = tempfile.TemporaryDirectory()
+                cmd = 'dcm2niix -w 1 -z y -o {} -f {} {}'.format(temp.name, output_name, folder)
                 utils.execute(cmd)
+                shutil.move(os.path.join(temp.name, output_name + ".nii.gz"), output_file)
             else:
                 dicom2nifti.dicom_series_to_nifti(folder, output_file, reorient_nifti=True)
 

@@ -15,8 +15,8 @@
 Clone the `tbi registration` repository and enter the `tbi_registration` directory:
 
 ```sh
-git clone git@bitbucket.org:LBL_TBI/tbi_registration.git
-cd tbi_registration
+git clone https://aessiari@bitbucket.org/LBL_TBI/autoct.git
+cd autoct
 ```
 
 #### Build Docker Image:

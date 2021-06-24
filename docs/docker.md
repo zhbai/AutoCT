@@ -27,7 +27,7 @@ cd tbi_registration
     - FSL (5.0.10)
     - AFNI (20.3.01)
 
-#### Pull Docker Image from Dockerhub:
+#### Pull Docker Image From Dockerhub:
 
 ```sh
 docker pull zhebai/autoct:1.0

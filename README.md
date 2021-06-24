@@ -13,8 +13,8 @@
 ![png](docs/flowchart.png)
 
 ## Getting Started
-   - Build docker image and use jupyter to run illustration notebook or autoct GUI notebook.
-      - Refer to [this document](./docs/docker.md) for a detailed description.
+   - Use Jupyter to run illustration notebook and/or runautoct GUI notebook.
+      - Refer to [this document](./docs/docker.md) for a detailed description using docker image.
    - Running on NERSC:
       - Refer to [this document](./docs/nersc.md) for a detailed description.
 

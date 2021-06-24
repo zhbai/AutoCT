@@ -19,13 +19,23 @@ git clone https://aessiari@bitbucket.org/LBL_TBI/autoct.git
 cd autoct
 ```
 
-#### Build Docker Image:
+#### Docker Image:
 
 - Docker image is based on `debian:stretch` and has the following installed:
     - Python (3.7.8)
     - ANTs (2.3.1)
     - FSL (5.0.10)
     - AFNI (20.3.01)
+
+#### Pull Docker Image From Dockerhub:
+
+```sh
+docker pull zhebai/autoct:1.0
+docker tag zhebai/autoct:1.0 autoct:1.0  # rename it so that the instructions below work.
+docker image list
+```
+
+#### Build Docker Image Locally:
 
 ```sh
 docker build -f docker/Dockerfile -t autoct:1.0 .

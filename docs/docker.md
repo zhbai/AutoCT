@@ -19,13 +19,23 @@ git clone git@bitbucket.org:LBL_TBI/tbi_registration.git
 cd tbi_registration
 ```
 
-#### Build Docker Image:
+#### Docker Image:
 
 - Docker image is based on `debian:stretch` and has the following installed:
     - Python (3.7.8)
     - ANTs (2.3.1)
     - FSL (5.0.10)
     - AFNI (20.3.01)
+
+#### Pull Docker Image from Dockerhub:
+
+```sh
+docker pull zhebai/autoct:1.0
+docker tag zhebai/autoct:1.0 autoct:1.0  # rename it so that the instructions below work.
+docker image list
+```
+
+#### Build Docker Image Locally:
 
 ```sh
 docker build -f docker/Dockerfile -t autoct:1.0 .

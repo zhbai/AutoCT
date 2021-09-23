@@ -10,13 +10,25 @@ logger = utils.init_logger('autoct.preprocessing')
 
 def __preprocessing(file, out_dir, mni_file):
     logger.info('Processing {}'.format(file))
-
     temp = tempfile.TemporaryDirectory()
     out1file = os.path.join(temp.name, 'swapped.nii.gz')
     utils.execute('fslswapdim {} x -y z {}'.format(file, out1file))
-    out2file = os.path.join(temp.name, 'resampled.nii.gz')
-    utils.execute('3dresample -dxyz 1.0 1.0 1.0 -orient RPI -inset {} -prefix {}'.format(out1file,
-                                                                                         out2file))
+    from . import afni
+    import shutil
+
+    if shutil.which('3dresample'):
+        logger.info('Using afni binary 3dreample ...')
+        out2file = os.path.join(temp.name, 'resampled_and_reoriented.nii.gz')
+        utils.execute('3dresample -dxyz 1.0 1.0 1.0 -orient RPI -inset {} -prefix {}'.format(out1file, out2file))
+    else:
+        cwd = os.getcwd()
+        os.chdir(temp.name)
+        logger.info('Using python based resampling ...')
+        temp_file = os.path.join(temp.name, 'resampled.nii.gz')
+        afni.do_resample(out1file , temp_file)
+        out2file = os.path.join(temp.name, 'reoriented.nii.gz')
+        afni.do_reorient(temp_file, out2file)
+        os.chdir(cwd)
 
     out3file = os.path.join(temp.name, 'reduced.nii.gz')
     utils.execute('robustfov -i {} -r {}'.format(out2file, out3file))
@@ -77,6 +89,9 @@ def preprocessing(pattern, out_dir, mni_file):
             count += 1
         except Exception as ex:
             logger.warning('Processing {} encountered exception {}'.format(file, ex))
+            import traceback
+
+            traceback.print_exception(ex)
 
     return utils.status(count, num_files)
 

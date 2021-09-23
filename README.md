@@ -13,8 +13,11 @@
 ![png](docs/flowchart.png)
 
 ## Getting Started
-   - Use Jupyter to run illustration notebook and/or runautoct GUI notebook.
+   - Use Docker/Jupyter to run illustration notebook and/or runautoct GUI notebook.
       - Refer to [this document](./docs/docker.md) for a detailed description using docker image.
+   - Use Bare-metal hosts to run illustration notebook and/or runautoct GUI notebook.
+      - You would need to install dependencies as needed
+      - Refer to [this document](./docs/baremetal.md) for instructions
    - Running on NERSC:
       - Refer to [this document](./docs/nersc.md) for a detailed description.
 

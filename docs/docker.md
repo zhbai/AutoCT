@@ -12,10 +12,10 @@
 
 #### AutoCT Repository:
 
-Clone the `tbi registration` repository and enter the `tbi_registration` directory:
+Clone the `autoct` repository and enter the `tbi_registration` directory:
 
 ```sh
-git clone https://aessiari@bitbucket.org/LBL_TBI/autoct.git
+git clone https://bitbucket.org/LBL_TBI/autoct.git
 cd autoct
 ```
 
@@ -25,20 +25,32 @@ cd autoct
     - Python (3.7.8)
     - ANTs (2.3.1)
     - FSL (5.0.10)
-    - AFNI (20.3.01)
 
-#### Pull Docker Image From Dockerhub:
+#### Optionally Manually Install AFNI (20.3.01):
+As of version 1.1 AFNI's `3dresample` used by the `preprocessing `step is no longer packaged. 
+
+On host machine download and extract to some directory and mount it as a volume using docker -v option 
+The path where the afni binaries reside need to be mounted as /opt/afni-bins like so: 
+`-v absolute-path-to-afni-binaries:/opt/afni-bins`
 
 ```sh
-docker pull zhebai/autoct:1.0
-docker tag zhebai/autoct:1.0 autoct:1.0  # rename it so that the instructions below work.
+mkdir -p absolute-path-to-afni-binaries
+curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz | tar -xz -C absolute-path-to-afni-binaries --strip-components 1
+
+```
+#### Pull Docker Image From Dockerhub:
+You can also build the image. Skip to next section.
+
+```sh
+docker pull zhebai/autoct:1.1
+docker tag zhebai/autoct:1.1 autoct:1.1  # rename it so that the instructions below work.
 docker image list
 ```
 
 #### Build Docker Image Locally:
 
 ```sh
-docker build -f docker/Dockerfile -t autoct:1.0 .
+docker build -f docker/Dockerfile -t autoct:1.1 .
 docker image list
 ```
 
@@ -50,7 +62,7 @@ volume onto the docker container. The command below mounts  a `/data` directory.
 ```sh
 ## Replace  DATA_DIR_ON_HOST with the absolute path to your data on the host machine
 
-docker run --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.0 /bin/bash
+docker run --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.1 /bin/bash
 ls /data    # Should show contents of DATA_DIR_ON_HOST 
 
 ## Extras
@@ -95,7 +107,7 @@ Also note: the `--rm` option means the container `autoct-reg` would automaticall
 ## Replace  DATA_DIR_ON_HOST with the absolute path to an existing directory on the host machine
 ## On host machine: 
 
-docker run --rm --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.0 /bin/bash
+docker run --rm --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.1 /bin/bash
 
 ## Inside container:
 autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output
@@ -127,7 +139,7 @@ Note: the --rm option means the container `autoct-jupyter-example` would be dele
 
 ```sh
 ## Replace DATA_DIR_ON_HOST with the absolute path to your data on the host machine
-docker run --rm --name autoct-jupyter-example -v DATA_DIR_ON_HOST:/data -p 8888:8888 -it autoct:1.0 
+docker run --rm --name autoct-jupyter-example -v DATA_DIR_ON_HOST:/data -p 8888:8888 -it autoct:1.1 
 ```
 ### Running On NERSC.
 
@@ -136,6 +148,6 @@ Refer to [this document](./nersc.md) for a detailed description.
 ### Running Tests:
 ```sh
 ## Replace REPO_DIR with the absolute path to autoct repository
-docker run --rm  -v REPO_DIR:/autocttesting -w /autocttesting  -it autoct:1.0  pytest tests
+docker run --rm  -v REPO_DIR:/autocttesting -w /autocttesting  -it autoct:1.1  pytest tests
 ```
 

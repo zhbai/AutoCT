@@ -32,8 +32,8 @@ RUN echo "Installing  ANTs ..." \
 
 ADD docker/ants-2.3.1-bins.tar.gz /opt/ants-2.3.1
 
-ENV PATH="/opt/afni-20.3.01:$PATH" \
-    AFNI_PLUGINPATH="/opt/afni-20.3.01"
+ENV PATH="/opt/afni-bins:$PATH" \
+    AFNI_PLUGINPATH="/opt/afni-bins"
 RUN apt-get update -qq \
     && apt-get install -y -q --no-install-recommends \
            ed \
@@ -65,8 +65,6 @@ RUN apt-get update -qq \
          ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0"; \
     fi \
     && ldconfig 
-
-ADD docker/afni-20.3.01-bins.tar.gz /opt/afni-20.3.01
 
 ENV FSLDIR="/opt/fsl-5.0.10" \
     PATH="/opt/fsl-5.0.10/bin:$PATH" \

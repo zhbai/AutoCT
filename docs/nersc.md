@@ -10,22 +10,22 @@
 ### Build And Push Image to NERSC's Registry
 
 ```sh
-git clone git@bitbucket.org:LBL_TBI/tbi_registration.git
-cd tbi_registration
-docker build -f docker/Dockerfile -t autoct:1.0 .
+git clone https://bitbucket.org/LBL_TBI/autoct.git
+cd autoct
+docker build -f docker/Dockerfile -t autoct:1.1 .
 export NERSC_USERNAME=????
 docker login registry.services.nersc.gov
-docker tag autoct:1.0 registry.services.nersc.gov/$NERSC_USERNAME/autoct:1.0
-docker push registry.services.nersc.gov/$NERSC_USERNAME/autoct:1.0 
+docker tag autoct:1.1 registry.services.nersc.gov/$NERSC_USERNAME/autoct:1.1
+docker push registry.services.nersc.gov/$NERSC_USERNAME/autoct:1.1 
 ```
 
 ### Pull Image And Run On Login Node
 
 ```sh
 ssh -i ~/.ssh/nersc $NERSC_USERNAME@cori.nersc.gov
-shifterimg pull registry.services.nersc.gov/$USER/autoct:1.0
+shifterimg pull registry.services.nersc.gov/$USER/autoct:1.1
 export DATA_ON_NERSC=????
-shifter --image=registry.services.nersc.gov/$USER/autoct:1.0 --volume=$DATA_ON_NERSC:/data /bin/bash
+shifter --image=registry.services.nersc.gov/$USER/autoct:1.1 --volume=$DATA_ON_NERSC:/data /bin/bash
 autoct-template-command-syn-average -h
 ```
 
@@ -35,9 +35,9 @@ Adjust the time (-t) depending on what you are planning to do.
 
 ```sh
 ssh -i ~/.ssh/nersc $NERSC_USERNAME@cori.nersc.gov
-shifterimg  pull registry.services.nersc.gov/$USER/autoct:1.0
+shifterimg  pull registry.services.nersc.gov/$USER/autoct:1.1
 export DATA_ON_NERSC=????
-salloc -N 1 -C haswell -q interactive -t 01:00:00 --image=registry.services.nersc.gov/$USER/autoct:1.0 \
+salloc -N 1 -C haswell -q interactive -t 01.10:00 --image=registry.services.nersc.gov/$USER/autoct:1.1 \
   --volume=$DATA_ON_NERSC:/data
 shifter /bin/bash
 ls /data 

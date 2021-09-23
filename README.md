@@ -21,7 +21,7 @@
    - Running on NERSC:
       - Refer to [this document](./docs/nersc.md) for a detailed description.
 
-# Sample Workflow Snapshots:
+## Sample Workflow Snapshots:
 
 ### Convert a series of .dcm files to .nii.gz files.
 

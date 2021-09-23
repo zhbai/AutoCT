@@ -1,6 +1,7 @@
 # Automated CT registration, segmentation, and quantification (AutoCT)
 
-### Processing and analyzing brain imaging is crucial in both scientific development and clinical field. In this software package, we build a pipeline that integrates automatic registration, segmentation, and quantitative analysis for subjects’ CT scans. Leveraging diffeomorphic transofrmations, we enable optimized forward and inverse mappings between an image and the reference. Furthermore, we extract localized features from deformation field based on an online template process, which advances statistical learning downstream. The created templates, atlas as well as our methods provide the brain imaging community tools for AI implementations.         
+Processing and analyzing brain imaging is crucial in both scientific development and clinical field. In this software package, we build a pipeline that integrates automatic registration, segmentation, and quantitative analysis for subjects’ CT scans. Leveraging diffeomorphic transofrmations, we enable optimized forward and inverse mappings between an image and the reference. Furthermore, we extract localized features from deformation field based on an online template process, which advances statistical learning downstream. The created templates, atlas as well as our methods provide the brain imaging community tools for AI implementations.     
+
 ## Typical Workflow
 - Convert dcm files to nii.gz.
 - Pre-process image orientation, voxel size/resolution, bias correction and pre-alignment.
@@ -12,7 +13,7 @@
 
 ![png](docs/flowchart.png)
 
-## Getting Started
+## Installation
    - Use Docker/Jupyter to run illustration notebook and/or runautoct GUI notebook.
       - Refer to [this document](./docs/docker.md) for a detailed description using docker image.
    - Use Bare-metal hosts to run illustration notebook and/or runautoct GUI notebook.
@@ -21,7 +22,9 @@
    - Running on NERSC:
       - Refer to [this document](./docs/nersc.md) for a detailed description.
 
-## Sample Workflow Snapshots:
+## Getting started
+
+See `notebooks/illustration.ipynb` for demonstrating the pipeline on CT image preprocessing, registration, segmentation and statistical measurements for each region of the brain. 
 
 ### Convert a series of .dcm files to .nii.gz files.
 
@@ -94,6 +97,8 @@ plot_images(join(output, '*', 'segmentation', '*/*.nii.gz'))
     
 ![png](docs/output_5_3.png)
     
+## License (BSD license)
+See the [LICENSE file](licence.txt) for details.
 
 ****************************
 

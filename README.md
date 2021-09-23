@@ -24,7 +24,7 @@ Processing and analyzing brain imaging is crucial in both scientific development
 
 ## Getting started
 
-See `notebooks/illustration.ipynb` for demonstrating the pipeline on CT image preprocessing, registration, segmentation and statistical measurements for each region of the brain. 
+See `notebooks/illustration.ipynb` for demonstrating the approach on CT image preprocessing, registration, segmentation and statistical measurements for each region of the brain. 
 
 ### Convert a series of .dcm files to .nii.gz files.
 

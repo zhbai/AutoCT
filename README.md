@@ -41,7 +41,7 @@ plot_images(join(output, '*', 'convert', "*.nii.gz"))
 
 
     
-![png](docs/output_1_1.png)
+![png](docs/output_original.png)
     
 
 
@@ -62,7 +62,7 @@ plot_images(join(output, '*', 'skull_strip', '*.nii.gz'))
 
 
     
-![png](docs/output_3_1.png)
+![png](docs/output_skullstrip.png)
     
 
 
@@ -74,6 +74,14 @@ autoct.registration(pattern=join(output, '*', 'skull_strip', '*.nii.gz'),
                  out_dir=output, 
                  template=template_file,
                  transforms=autoct.supported_registration_transforms())
+```
+    Plotting data/illustration_workflow_output/ID_0eba6ca7-7473dee7c1/registration/Affine2SyN/ID_0eba6ca7-7473dee7c1_preprocessed_affine2SynWarped.nii.gz:shape=(182, 218, 182)
+    
+    
+![png](docs/output_warped.png)
+
+    
+```python
 autoct.segmentation(pattern=join(output, '*', 'registration', '*/*.nii.gz'), 
                  out_dir=output, 
                  atlas=atlas_file,
@@ -83,10 +91,8 @@ plot_images(join(output, '*', 'segmentation', '*/*.nii.gz'))
 
     Plotting output/ID_0eba6ca7-7473dee7c1/segmentation/PHYSCi/ID_0eba6ca7-7473dee7c1_segmentation_cortical_phy.nii.gz:shape=(182, 218, 182)
 
-
-
     
-![png](docs/output_5_1.png)
+![png](docs/output_seg_phy.png)
     
 
 
@@ -95,7 +101,7 @@ plot_images(join(output, '*', 'segmentation', '*/*.nii.gz'))
 
 
     
-![png](docs/output_5_3.png)
+![png](docs/output_seg_aff.png)
     
 ## License (BSD license)
 See the [LICENSE file](licence.txt) for details.

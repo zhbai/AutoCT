@@ -76,7 +76,7 @@ def display_image(img, output=None, use_viewer=True):
 
 
 class Inputs:
-    _outdir = 'data/illustration_output'
+    _outdir = '/output/illustration_output'
     _mni = 'illustration_data/MNI152_T1_1mm_brain.nii.gz'
     _atlas = 'illustration_data/New_atlas_cort_asym_sub.nii.gz'
     _template = 'illustration_data/T_template0.nii.gz'

@@ -4,7 +4,7 @@ setup(
     name='autoct_registration',
     version='1.1',
     include_package_data=True,
-    url='https://bitbucket.org/LBL_TBI/tbi_registration/',
+    url='https://github.com/zhbai/AutoCT1.1/',
     author='Zhe Bai, Abdelilah Essiari',
     author_email='zhebai@lbl.gov, aessiari@lbl.gov',
     description='Description of my package',

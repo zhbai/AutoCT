@@ -1,14 +1,16 @@
 # Automated CT registration, segmentation, and quantification (AutoCT)
 
-Processing and analyzing brain imaging is crucial in both scientific development and clinical field. In this software package, we build a pipeline that integrates automatic registration, segmentation, and quantitative analysis for subjects’ CT scans. Leveraging diffeomorphic transofrmations, we enable optimized forward and inverse mappings between an image and the reference. Furthermore, we extract localized features from deformation field based on an online template process, which advances statistical learning downstream. The created templates, atlas as well as our methods provide the brain imaging community tools for AI implementations.     
+Processing and analyzing brain imaging is crucial in both scientific 
+development and clinical field. In this software package, we build a 
+pipeline that integrates automatic registration, segmentation, and quantitative analysis for subjects? CT scans. Leveraging diffeomorphic transformations, we enable optimized forward and inverse mappings between an image and the reference. Furthermore, we extract localized features from deformation field based on an online template process, which advances statistical learning downstream. The created templates, atlas as well as our methods provide the brain imaging community tools for AI implementations.     
 
 ## Typical Workflow
-- Convert dcm files to nii.gz.
+- Convert DICOM files to NIfTI.
 - Pre-process image orientation, voxel size/resolution, bias correction and pre-alignment.
 - Strip the skull from CT volume.
 - Register the skull-stripped CT scan to a given template.
-- Segment the skull-stripped CT scan based on a given atlas
-- Calculate geometric measures 
+- Segment the skull-stripped CT scan based on a given atlas.
+- Calculate geometric measures.
 - Calculate statistics of warp image for each region of the brain.
 
 ![png](docs/flowchart.png)

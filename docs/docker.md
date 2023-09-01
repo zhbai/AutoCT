@@ -26,17 +26,6 @@ cd autoct
     - ANTs (2.3.1)
     - FSL (5.0.10)
 
-#### Optionally Manually Install AFNI (20.3.01):
-As of version 1.1 AFNI's `3dresample` used by the `preprocessing `step is no longer packaged. 
-
-On host machine download and extract to some directory and mount it as a volume using docker -v option 
-The path where the afni binaries reside need to be mounted as /opt/afni-bins like so: 
-`-v absolute-path-to-afni-binaries:/opt/afni-bins`
-
-```sh
-mkdir -p absolute-path-to-afni-binaries
-curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz | tar -xz -C absolute-path-to-afni-binaries --strip-components 1
-
 ```
 #### Pull Docker Image From Dockerhub:
 You can also build the image. Skip to next section.

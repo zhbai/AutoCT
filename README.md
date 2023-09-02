@@ -1,6 +1,7 @@
 # Automated CT registration, segmentation, and quantification (AutoCT)
 
-Processing and analyzing brain imaging is crucial in both scientific 
+Processing and analyzing CT (e.g. brain) imaging is crucial in both 
+scientific 
 development and clinical field. In this software package, we build a 
 pipeline that integrates automatic registration, segmentation, and 
 quantitative analysis for subjects' CT scans. Leveraging diffeomorphic transformations, we enable optimized forward and inverse mappings between an image and the reference. Furthermore, we extract localized features from deformation field based on an online template process, which advances statistical learning downstream. The created templates, atlas as well as our methods provide the brain imaging community tools for AI implementations.     

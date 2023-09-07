@@ -15,8 +15,8 @@
 Clone the `autoct` repository and enter the `tbi_registration` directory:
 
 ```sh
-git clone https://bitbucket.org/LBL_TBI/autoct.git
-cd autoct
+git clone https://github.com/zhbai/AutoCT1.1.git
+cd AutoCT1.1
 ```
 
 #### Docker Image:

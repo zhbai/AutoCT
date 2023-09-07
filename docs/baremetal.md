@@ -7,11 +7,6 @@
     - ANTs (2.3.1)
     - FSL (5.0.10)
 
-```sh
-# This should show if it is in the path.
-which 3dresample
-```
-
 #### AutoCT Repository:
 
 Clone the `AutoCT` repository.

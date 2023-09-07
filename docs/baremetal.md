@@ -40,7 +40,7 @@ python -m pip install -e .
 ## Workflow tools:
 autoct-convert -h
 autoct-preprocessing -h
-autoct-skull-strip -h
+autoct-bone-strip -h
 autoct-registration -h
 autoct-segmentation -h
 autoct-label-geometry-measures -h 
@@ -61,9 +61,9 @@ autoct-convert --use-dcm2niix 'notebooks/illustration_data/dcmfiles/*' output
 
 autoct-preprocessing -m notebooks/illustration_data/MNI152_T1_1mm_brain.nii.gz 'output/*/convert/*.nii.gz' output
 
-autoct-skull-strip 'output/*/preprocessing/*.nii.gz' output
+autoct-bone-strip 'output/*/preprocessing/*.nii.gz' output
 
-autoct-registration -t notebooks/illustration_data/T_template0.nii.gz 'output/*/skull_strip/*.nii.gz' output
+autoct-registration -t notebooks/illustration_data/T_template0.nii.gz 'output/*/bone_strip/*.nii.gz' output
 
 autoct-segmentation -a notebooks/illustration_data/New_atlas_cort_asym_sub.nii.gz 'output/*/registration/*/*.nii.gz' output
 

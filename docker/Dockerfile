@@ -1,4 +1,5 @@
-ARG base_image=python:3.7-slim-stretch
+# ARG base_image=python:3.7-slim-stretch
+ARG base_image=python:3.7.17-slim-bullseye
   
 FROM ${base_image} AS base
 
@@ -9,8 +10,7 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8" 
 
-RUN export ND_ENTRYPOINT="/neurodocker/startup.sh" \
-    && apt-get update -qq \
+RUN apt-get update -qq \
     && apt-get install -y -q --no-install-recommends \
            apt-utils \
            bzip2 \
@@ -30,41 +30,7 @@ ENV ANTSPATH="/opt/ants-2.3.1" \
 RUN echo "Installing  ANTs ..." \
     && mkdir -p /opt/ants-2.3.1
 
-ADD docker/ants-2.3.1-bins.tar.gz /opt/ants-2.3.1
-
-ENV PATH="/opt/afni-bins:$PATH" \
-    AFNI_PLUGINPATH="/opt/afni-bins"
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends \
-           ed \
-           gsl-bin \
-           libglib2.0-0 \
-           libglu1-mesa-dev \
-           libglw1-mesa \
-           libgomp1 \
-           libjpeg62 \
-           libxm4 \
-           multiarch-support \
-           netpbm \
-           tcsh \
-           xfonts-base \
-           xvfb \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://mirrors.kernel.org/debian/pool/main/libx/libxp/libxp6_1.0.2-2_amd64.deb \
-    && dpkg -i /tmp/toinstall.deb \
-    && rm /tmp/toinstall.deb \
-    && curl -sSL --retry 5 -o /tmp/toinstall.deb http://snapshot.debian.org/archive/debian-security/20160113T213056Z/pool/updates/main/libp/libpng/libpng12-0_1.2.49-1%2Bdeb7u2_amd64.deb \
-    && dpkg -i /tmp/toinstall.deb \
-    && rm /tmp/toinstall.deb \
-    && apt-get install -f \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && gsl2_path="$(find / -name 'libgsl.so.19' || printf '')" \
-    && if [ -n "$gsl2_path" ]; then \
-         ln -sfv "$gsl2_path" "$(dirname $gsl2_path)/libgsl.so.0"; \
-    fi \
-    && ldconfig 
+ADD docker/files/ants-2.3.1-bins.tar.gz /opt/ants-2.3.1
 
 ENV FSLDIR="/opt/fsl-5.0.10" \
     PATH="/opt/fsl-5.0.10/bin:$PATH" \
@@ -99,9 +65,9 @@ RUN apt-get update -qq \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* 
 
-ADD docker/fsl-5.0.10-bins.tar.gz /opt/fsl-5.0.10
+ADD docker/files/fsl-5.0.10-bins.tar.gz /opt/fsl-5.0.10
 
-ADD docker/dcm2niix.tar.gz /opt/dcm2niix/bin
+ADD docker/files/dcm2niix.tar.gz /opt/dcm2niix/bin
 ENV PATH="/opt/dcm2niix/bin:$PATH" 
 
 ARG autoct_user=autoct
@@ -111,7 +77,6 @@ RUN groupadd \
         --gid ${autoct_uid} \
         ${autoct_user} && \
     useradd \
-        --comment "TBI User" \
         --create-home \
         --gid ${autoct_uid} \
         --uid ${autoct_uid} \
@@ -124,18 +89,18 @@ RUN groupadd \
 ADD setup.py /build_dir/
 ADD autoct /build_dir/autoct
 
-RUN python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel \
+RUN export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True && python3 -m pip install --no-cache-dir --upgrade pip setuptools wheel \
     && python3 -m pip install --no-cache-dir /build_dir \
     && rm -rf /build_dir \
     && jupyter nbextension enable --py widgetsnbextension
 
 ADD notebooks /notebooks
-ADD licence.txt /notebooks/
-RUN chown -R ${autoct_user}:${autoct_uid} /notebooks 
+ADD LICENSE /notebooks/
+RUN mkdir -p /data && chown -R ${autoct_user}:${autoct_uid} /notebooks /data
 
 RUN echo '#!/bin/bash\n\
 echo "*************************************************************"\n\
-echo "* Please consult license located at /notebooks/licence.txt. *"\n\
+echo "* Please consult license located at /notebooks/LICENSE. *"\n\
 echo "*************************************************************"\n\
 exec "$@"\
 ' > /usr/local/bin/auto_ct_entrypoint.sh && chmod +x /usr/local/bin/auto_ct_entrypoint.sh

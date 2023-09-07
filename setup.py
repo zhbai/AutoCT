@@ -24,7 +24,7 @@ setup(
        'console_scripts': [
               'autoct-convert = autoct.convert:main',
               'autoct-preprocessing = autoct.preprocessing:main',
-              'autoct-skull-strip = autoct.skull_strip:main',
+              'autoct-bone-strip = autoct.bone_strip:main',
               'autoct-template-command-syn-average = autoct.template_command_syn_average:main',
               'autoct-registration = autoct.registration:main',
               'autoct-segmentation = autoct.segmentation:main',

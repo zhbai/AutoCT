@@ -26,26 +26,26 @@ def compare_images(img1, img2):
     return comp.all() and img1.header == img2.header
 
 
-def skull_strip_filename():
+def bone_strip_filename():
     return 'ID_0ead008d-ecef2edb6b_brain.nii.gz'
 
 
 @pytest.fixture
-def skull_strip_input():
+def bone_strip_input():
     return os.path.join(input_dir(), 'ID_0ead008d-ecef2edb6b_normalizedWarped.nii.gz')
 
 
-def test_skull_strip(skull_strip_input):
-    autoct.skull_strip(skull_strip_input, output_dir())
+def test_bone_strip(bone_strip_input):
+    autoct.bone_strip(bone_strip_input, output_dir())
 
     # File generated using R code
-    skull_strip_expected = os.path.join(input_dir(), 'expected', 'skull_strip', skull_strip_filename())
+    bone_strip_expected = os.path.join(input_dir(), 'expected', 'bone_strip', bone_strip_filename())
 
     from autoct import utils
 
-    prefix = utils.prefix(skull_strip_input, '_normalizedWarped.nii')
-    skull_strip_output_file = os.path.join(output_dir(), 
+    prefix = utils.prefix(bone_strip_input, '_normalizedWarped.nii')
+    bone_strip_output_file = os.path.join(output_dir(), 
                                            prefix, 
-                                           'skull_strip', 
-                                           skull_strip_filename())
-    assert compare_images(skull_strip_expected, skull_strip_output_file)
+                                           'bone_strip', 
+                                           bone_strip_filename())
+    assert compare_images(bone_strip_expected, bone_strip_output_file)

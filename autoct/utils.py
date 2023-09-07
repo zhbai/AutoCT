@@ -118,14 +118,14 @@ def build_pre_processing_arg_parser():
     return parser
 
 
-def build_skull_strip_arg_parser():
+def build_bone_strip_arg_parser():
     description = (
-           'Strip the skull from CT volume.'
+           'Strip the bone from CT volume.'
            '\n'
            '\n'
            'Example:'
            '\n'
-           "      autoct-skull-strip  'preprocessing/*.nii.gz' brains"
+           "      autoct-bone-strip  'preprocessing/*.nii.gz' brains"
            '\n'
     )
 
@@ -168,7 +168,7 @@ def supported_registration_transforms():
 
 def build_registration_arg_parser():
     description = (
-           'Register the skull-stripped CT scan to a template.'
+           'Register the bone-stripped CT scan to a template.'
            '\n'
            '\n'
            'Supported transforms:'
@@ -192,7 +192,7 @@ def build_registration_arg_parser():
     parser.add_argument('-T', '--transforms', nargs='+', default=defaults,
                         help='transforms to use (defaults to %s)' % defaults)
     parser.add_argument('-t', '--template-file', type=str, help='template file', required=True)
-    parser.add_argument('input', type=str, help='input glob expression for skull-stripped CT scans')
+    parser.add_argument('input', type=str, help='input glob expression for bone-stripped CT scans')
     parser.add_argument('output', type=str, help='output directory')
     return parser
 
@@ -203,7 +203,7 @@ def supported_segmentation_types():
 
 def build_segmentation_arg_parser():
     description = (
-           'Segment the registered skull-stripped CT scan based on a given atlas.'
+           'Segment the registered bone-stripped CT scan based on a given atlas.'
            '\n'
            '\n'
            'Supported segmentation types:'

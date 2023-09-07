@@ -42,7 +42,7 @@ def __registration(file, out_dir, template, transform):
 
 
 def registration(pattern, out_dir, template, transforms=None):
-    """Register the skull-stripped CT scan to a template.
+    """Register the bone-stripped CT scan to a template.
 
     Supported transforms:
         a:  rigid + affine (2 stages)'
@@ -52,7 +52,7 @@ def registration(pattern, out_dir, template, transforms=None):
     Parameters
     ----------
         pattern : str
-            Glob path expression to locate the skull-stripped CT scan
+            Glob path expression to locate the bone-stripped CT scan
         out_dir  : str
             Output Directory
         template: str 

@@ -127,16 +127,16 @@ class Inputs:
         return cls.outdir()
 
     @classmethod
-    def skull_strip_input_pattern(cls, pattern='*.nii.gz'):
+    def bone_strip_input_pattern(cls, pattern='*.nii.gz'):
         return join(cls.preprocessing_output_dir(), '*', 'preprocessing', pattern)
 
     @classmethod
-    def skull_strip_output_dir(cls):
+    def bone_strip_output_dir(cls):
         return cls.outdir()
 
     @classmethod
     def registration_input_pattern(cls, pattern='*.nii.gz'):
-        return join(cls.skull_strip_output_dir(), '*', 'skull_strip', pattern)
+        return join(cls.bone_strip_output_dir(), '*', 'bone_strip', pattern)
 
     @classmethod
     def registration_output_dir(cls):
@@ -335,11 +335,11 @@ def run_preprocessing(output, mni_textfield,
                              mni_textfield.value)
 
 
-def run_skull_strip(output, pattern_textfield, output_dir_textfield, b):
+def run_bone_strip(output, pattern_textfield, output_dir_textfield, b):
     output.clear_output()
 
     with output:
-        autoct.skull_strip(pattern_textfield.value, output_dir_textfield.value)
+        autoct.bone_strip(pattern_textfield.value, output_dir_textfield.value)
 
 
 def run_registration(output,
@@ -450,17 +450,17 @@ def create_preprocessing_box(output, header):
     return create_panel(html, box1, box2, box3, button_box)
 
 
-def create_skull_strip_box(output, header):
+def create_bone_strip_box(output, header):
     html = create_html(header)
 
-    box1, pattern_textfield = create_textfield_box('Input Pattern:', Inputs.skull_strip_input_pattern)
-    box2, outdir_textfield = create_textfield_box('Output Directory:', Inputs.skull_strip_output_dir)
+    box1, pattern_textfield = create_textfield_box('Input Pattern:', Inputs.bone_strip_input_pattern)
+    box2, outdir_textfield = create_textfield_box('Output Directory:', Inputs.bone_strip_output_dir)
 
     run_button = widgets.Button(description="Run", button_style='success')
     show_button = widgets.Button(description="Show", button_style='info')
     state = (output, pattern_textfield, outdir_textfield)
-    run_button.on_click(partial(run_skull_strip, *state))
-    show_button.on_click(partial(show_images, output, '*/skull_strip/*.nii.gz', outdir_textfield))
+    run_button.on_click(partial(run_bone_strip, *state))
+    show_button.on_click(partial(show_images, output, '*/bone_strip/*.nii.gz', outdir_textfield))
     button_box = create_button_box(run_button, show_button)
 
     return create_panel(html, box1, box2, button_box)
@@ -547,10 +547,10 @@ __HEADERS__ = (
     <h5>Preprocessing process image orientation, voxel size/resolution, bias correction and pre-alignment.</h5>
     """,
     """
-    <h5>SkullStrip: strip the skull from CT volume.</h5>
+    <h5>BoneStrip: strip the bone from CT volume.</h5>
     """,
     """ 
-    <h5>Registration: register the skull-stripped CT scan to a template.</h5>
+    <h5>Registration: register the bone-stripped CT scan to a template.</h5>
     <ul>
     <li>s:  3 stages rigid + affine + deformable syn </li>
     <li>a:  2 stages rigid + affine</li>
@@ -558,7 +558,7 @@ __HEADERS__ = (
     </ul>
     """,
     """ 
-    <h5>Segmentation: segment the skull-stripped CT scan based on a given atlas.</h5>
+    <h5>Segmentation: segment the bone-stripped CT scan based on a given atlas.</h5>
     <ul>
     <li>Physical: segmentation in the (pre-processed) patient's space</li>
     <li>Affine:   segmentaion in the transformed affine space</li>
@@ -581,7 +581,7 @@ __HEADERS__ = (
 __CREATE_FUNCS__ = (create_input_box,
                     create_convert_box,
                     create_preprocessing_box,
-                    create_skull_strip_box,
+                    create_bone_strip_box,
                     create_registration_box,
                     create_segmentation_box,
                     create_geo_box,
@@ -590,7 +590,7 @@ __CREATE_FUNCS__ = (create_input_box,
 __TITLES__ = ('Inputs',
               'Convert',
               'Preprocessing',
-              'SkullStrip',
+              'BoneStrip',
               'Registration',
               'Segmentation',
               'GeoMeasures',

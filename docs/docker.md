@@ -26,17 +26,6 @@ cd autoct
     - ANTs (2.3.1)
     - FSL (5.0.10)
 
-#### Optionally Manually Install AFNI (20.3.01):
-As of version 1.1 AFNI's `3dresample` used by the `preprocessing `step is no longer packaged. 
-
-On host machine download and extract to some directory and mount it as a volume using docker -v option 
-The path where the afni binaries reside need to be mounted as /opt/afni-bins like so: 
-`-v absolute-path-to-afni-binaries:/opt/afni-bins`
-
-```sh
-mkdir -p absolute-path-to-afni-binaries
-curl -fsSL --retry 5 https://afni.nimh.nih.gov/pub/dist/tgz/linux_openmp_64.tgz | tar -xz -C absolute-path-to-afni-binaries --strip-components 1
-
 ```
 #### Pull Docker Image From Dockerhub:
 You can also build the image. Skip to next section.
@@ -72,7 +61,7 @@ docker exec -it autoct-reg /bin/bash  # to open another terminal in container.
 ## Workflow tools:
 autoct-convert -h
 autoct-preprocessing -h
-autoct-skull-strip -h
+autoct-bone-strip -h
 autoct-registration -h
 autoct-segmentation -h
 autoct-label-geometry-measures -h 
@@ -115,10 +104,10 @@ autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output
 autoct-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
      /data/output
 
-autoct-skull-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
+autoct-bone-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
 
 autoct-registration -t illustration_data/T_template0.nii.gz \
-  '/data/output/*/skull_strip/*.nii.gz' /data/output
+  '/data/output/*/bone_strip/*.nii.gz' /data/output
 
 autoct-segmentation -a illustration_data/New_atlas_cort_asym_sub.nii.gz  \
   '/data/output/*/registration/*/*.nii.gz' /data/output

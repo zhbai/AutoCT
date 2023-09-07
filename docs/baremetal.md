@@ -20,7 +20,7 @@ cd AutoCT
 #### Installation Using Conda:
 
 ```sh
-conda create -n my-autoct python=3.7.9
+conda create -n my-autoct python=3.7
 conda activate my-autoct
 python -m pip install .
 # For devolopment mode 

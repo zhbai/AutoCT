@@ -130,13 +130,3 @@ Note: the --rm option means the container `autoct-jupyter-example` would be dele
 ## Replace DATA_DIR_ON_HOST with the absolute path to your data on the host machine
 docker run --rm --name autoct-jupyter-example -v DATA_DIR_ON_HOST:/data -p 8888:8888 -it autoct:1.1.2 
 ```
-### Running On NERSC.
-
-Refer to [this document](./nersc.md) for a detailed description.
-
-### Running Tests:
-```sh
-## Replace REPO_DIR with the absolute path to autoct repository
-docker run --rm  -v REPO_DIR:/autocttesting -w /autocttesting  -it autoct:1.1.2  pytest tests
-```
-

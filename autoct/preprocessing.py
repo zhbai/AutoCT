@@ -13,7 +13,7 @@ def __preprocessing(file, out_dir, mni_file):
     temp = tempfile.TemporaryDirectory()
     out1file = os.path.join(temp.name, 'swapped.nii.gz')
     utils.execute('fslswapdim {} x -y z {}'.format(file, out1file))
-    from . import afni
+    from . import resample
     import shutil
 
     if shutil.which('3dresample'):
@@ -25,9 +25,9 @@ def __preprocessing(file, out_dir, mni_file):
         os.chdir(temp.name)
         logger.info('Using python based resampling ...')
         temp_file = os.path.join(temp.name, 'resampled.nii.gz')
-        afni.do_resample(out1file , temp_file)
+        resample.do_resample(out1file, temp_file)
         out2file = os.path.join(temp.name, 'reoriented.nii.gz')
-        afni.do_reorient(temp_file, out2file)
+        resample.do_reorient(temp_file, out2file)
         os.chdir(cwd)
 
     out3file = os.path.join(temp.name, 'reduced.nii.gz')

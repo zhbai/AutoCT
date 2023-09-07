@@ -61,7 +61,7 @@ docker exec -it autoct-reg /bin/bash  # to open another terminal in container.
 ## Workflow tools:
 autoct-convert -h
 autoct-preprocessing -h
-autoct-skull-strip -h
+autoct-bone-strip -h
 autoct-registration -h
 autoct-segmentation -h
 autoct-label-geometry-measures -h 
@@ -104,10 +104,10 @@ autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output
 autoct-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
      /data/output
 
-autoct-skull-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
+autoct-bone-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
 
 autoct-registration -t illustration_data/T_template0.nii.gz \
-  '/data/output/*/skull_strip/*.nii.gz' /data/output
+  '/data/output/*/bone_strip/*.nii.gz' /data/output
 
 autoct-segmentation -a illustration_data/New_atlas_cort_asym_sub.nii.gz  \
   '/data/output/*/registration/*/*.nii.gz' /data/output

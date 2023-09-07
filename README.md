@@ -8,9 +8,9 @@ quantitative analysis for subjects' CT scans. Leveraging diffeomorphic transform
 ## Typical Workflow
 - Convert DICOM files to NIfTI.
 - Pre-process image orientation, voxel size/resolution, bias correction and pre-alignment.
-- Strip the skull from CT volume.
-- Register the skull-stripped CT scan to a given template.
-- Segment the skull-stripped CT scan based on a given atlas.
+- Strip the bone from CT volume.
+- Register the bone-stripped CT scan to a given template.
+- Segment the bone-stripped CT scan based on a given atlas.
 - Calculate geometric measures.
 - Calculate statistics of warp image for each region of the brain.
 
@@ -48,32 +48,32 @@ plot_images(join(output, '*', 'convert', "*.nii.gz"))
     
 
 
-### Pre-process and strip the skull from CT volume.
+### Pre-process and strip the bone from CT volume.
 
 
 ```python
 autoct.preprocessing(pattern=join(output, '*', 'convert', '*.nii.gz'), 
                   out_dir=output,
                   mni_file=mni_file)
-autoct.skull_strip(pattern=join(output, '*', 'preprocessing', '*.nii.gz'),
+autoct.bone_strip(pattern=join(output, '*', 'preprocessing', '*.nii.gz'),
                 out_dir=output)
-plot_images(join(output, '*', 'skull_strip', '*.nii.gz'))
+plot_images(join(output, '*', 'bone_strip', '*.nii.gz'))
 ```
 
-    Plotting output/ID_0eba6ca7-7473dee7c1/skull_strip/ID_0eba6ca7-7473dee7c1_brain.nii.gz:shape=(182, 218, 182)
+    Plotting output/ID_0eba6ca7-7473dee7c1/bone_strip/ID_0eba6ca7-7473dee7c1_brain.nii.gz:shape=(182, 218, 182)
 
 
 
     
-![png](docs/output_skullstrip.png)
+![png](docs/output_bonestrip.png)
     
 
 
-### Register the skull-stripped CT scan to a template and segment the skull-stripped CT scan based on a given atlas.
+### Register the bone-stripped CT scan to a template and segment the bone-stripped CT scan based on a given atlas.
 
 
 ```python
-autoct.registration(pattern=join(output, '*', 'skull_strip', '*.nii.gz'), 
+autoct.registration(pattern=join(output, '*', 'bone_strip', '*.nii.gz'), 
                  out_dir=output, 
                  template=template_file,
                  transforms=autoct.supported_registration_transforms())

@@ -22,11 +22,11 @@ def test_workflow():
                                   mni_file=mni_file)
     assert ret == 0, 'preprocessing failed'
 
-    ret, _ = autoct.skull_strip(pattern=join(output, '*', 'preprocessing', '*.nii.gz'),
-                                out_dir=output)
-    assert ret == 0, 'skull_strip failed'
+    ret, _ = autoct.bone_strip(pattern=join(output, '*', 'preprocessing', '*.nii.gz'),
+                               out_dir=output)
+    assert ret == 0, 'bone_strip failed'
 
-    ret, _ = autoct.registration(pattern=join(output, '*', 'skull_strip', '*.nii.gz'),
+    ret, _ = autoct.registration(pattern=join(output, '*', 'bone_strip', '*.nii.gz'),
                                  out_dir=output,
                                  template=template_file,
                                  transforms=autoct.supported_registration_transforms())

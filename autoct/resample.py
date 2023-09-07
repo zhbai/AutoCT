@@ -599,7 +599,6 @@ def nifti_convert_n1hdr2nim(header):
        nim.cal_min = FIXED_FLOAT(nhdr.cal_min)
        nim.cal_max = FIXED_FLOAT(nhdr.cal_max)
        nim.iname_offset  = nhdr.vox_offset
-       # TODO HUM 348 afni says 352 for the size of the header
        if nim.iname_offset < header.sizeof_hdr: nim.iname_offset = header.sizeof_hdr 
        nim.num_ext = 0
        nim.ext_list = []
@@ -611,10 +610,9 @@ def nifti_read_extensions(nim, fp, remain):
 
 def nifti_image_read(nii_file):
     img = nib.load(nii_file)
-    ni_ver = 1 #TODO support other versions ???
+    ni_ver = 1
     nim = nifti_convert_n1hdr2nim(img.header)
     nim.img = img
-    # TODO? for reading extensions .... remain = nim.iname_offset
     return nim
 
 def nifti_dmat33_mul(A , B):
@@ -1505,7 +1503,6 @@ def AFNI_lmap_to_zslice_float(rig_bod_warp, resam_mode, old_daxes, bold, new_dax
     # TODAY ABDOU
     
     # case YZ_ZERO
-    # afni_slice.c:403
     YZ_ZERO = 6
 
     ib = []
@@ -1557,7 +1554,6 @@ def AFNI_lmap_to_zslice_float(rig_bod_warp, resam_mode, old_daxes, bold, new_dax
 
         yj_new += 1
 
-# afni_warp.c:78
 def AFNI_dataset_slice(dset, fixed_axis, fixed_index, ival, resam_mode):
     assert resam_mode == 0
     assert fixed_axis == 3 
@@ -1579,7 +1575,6 @@ def AFNI_dataset_slice(dset, fixed_axis, fixed_index, ival, resam_mode):
     ### AES_NEW
     parent_to_child_warp = dset.warp
     parent_to_child_warp.rig_bod = SimpleNamespace()
-    # IDENTITY_WARP afni_warp.c:199  
     temp = parent_to_child_warp.rig_bod.warp = SimpleNamespace()
     temp.mfor = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
     temp.mbac = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
@@ -1619,7 +1614,6 @@ def r_fill_resampled_data_brick(dset):
     ival = nv - 1
     slices = []
     
-    # NOTES: afni_warp.c:300 
     for slize in range(nz):
        bslice = AFNI_dataset_slice(dset, 3, slize, 0, 0)
        slices.append(bslice)

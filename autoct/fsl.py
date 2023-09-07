@@ -36,7 +36,7 @@ def fsl_bet2(file, outfile, opts='-f 0.01 -v'):
     return outfile
 
 
-def fsl_skull_strip(input_file, temp_dir_name):
+def fsl_bone_strip(input_file, temp_dir_name):
     import os
 
     # Threshold image to 0-100

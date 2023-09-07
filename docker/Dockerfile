@@ -96,7 +96,7 @@ RUN export SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True && python3 -m p
 
 ADD notebooks /notebooks
 ADD LICENSE /notebooks/
-RUN chown -R ${autoct_user}:${autoct_uid} /notebooks 
+RUN mkdir -p /data && chown -R ${autoct_user}:${autoct_uid} /notebooks /data
 
 RUN echo '#!/bin/bash\n\
 echo "*************************************************************"\n\

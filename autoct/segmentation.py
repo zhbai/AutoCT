@@ -50,7 +50,7 @@ def __segmentation(file, out_dir, atlas, seg_type):
 
 
 def segmentation(pattern, out_dir, atlas, types=None):
-    """Segment the registered skull-stripped CT scan based on a given atlas.
+    """Segment the registered bone-stripped CT scan based on a given atlas.
 
     Supported segmentation types:
         Affine:  segmentaion in the transformed affine space 
@@ -59,7 +59,7 @@ def segmentation(pattern, out_dir, atlas, types=None):
     Parameters
     ----------
         pattern : str
-            Glob path expression to locate the registered skull-stripped CT scan
+            Glob path expression to locate the registered bone-stripped CT scan
         out_dir  : str
             Output Directory
         atlas: str 

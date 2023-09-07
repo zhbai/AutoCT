@@ -106,7 +106,7 @@ plot_images(join(output, '*', 'segmentation', '*/*.nii.gz'))
 ![png](docs/output_seg_aff.png)
     
 ## License (BSD license)
-See the [LICENSE file](licence.txt) for details.
+See the [LICENSE file](LICENSE) for details.
 
 ****************************
 

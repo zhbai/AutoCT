@@ -15,7 +15,7 @@ quantitative analysis for subjects' CT scans. Leveraging diffeomorphic transform
 - Calculate geometric measures.
 - Calculate statistics of warp image for each region of the brain.
 
-![png](docs/flowchart.png)
+![png](docs/autoCT.png)
 
 ## Installation
    - Use Docker/Jupyter to run illustration notebook and/or runautoct GUI notebook.

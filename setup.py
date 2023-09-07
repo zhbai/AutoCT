@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name='autoct_registration',
-    version='1.1',
+    version='1.1.2',
     include_package_data=True,
-    url='https://github.com/zhbai/AutoCT1.1/',
+    url='https://github.com/zhbai/AutoCT/',
     author='Zhe Bai, Abdelilah Essiari',
     author_email='zhebai@lbl.gov, aessiari@lbl.gov',
     description='Description of my package',
@@ -12,6 +12,9 @@ setup(
     install_requires=[
        'dicom2nifti==2.0.9', 
        'nibabel==3.2.0', 
+       'joblib==1.0.1',
+       'sklearn==0.0',
+       'scikit-learn==0.24.2',
        'nilearn==0.6.2', 
        'nipype==1.6.0', 
        'pytest==6.0.1', 

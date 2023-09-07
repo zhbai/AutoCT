@@ -12,17 +12,17 @@
 
 #### AutoCT Repository:
 
-Clone the `autoct` repository and enter the `tbi_registration` directory:
+Clone the `autoct` repository.
 
 ```sh
-git clone https://github.com/zhbai/AutoCT1.1.git
-cd AutoCT1.1
+git clone https://github.com/zhbai/AutoCT.git
+cd AutoCT
 ```
 
 #### Docker Image:
 
 - Docker image is based on `debian:stretch` and has the following installed:
-    - Python (3.7.8)
+    - Python (3.7)
     - ANTs (2.3.1)
     - FSL (5.0.10)
 
@@ -31,15 +31,15 @@ cd AutoCT1.1
 You can also build the image. Skip to next section.
 
 ```sh
-docker pull zhebai/autoct:1.1
-docker tag zhebai/autoct:1.1 autoct:1.1  # rename it so that the instructions below work.
+docker pull zhebai/autoct:1.1.2
+docker tag zhebai/autoct:1.1.2 autoct:1.1.2  # rename it so that the instructions below work.
 docker image list
 ```
 
 #### Build Docker Image Locally:
 
 ```sh
-docker build -f docker/Dockerfile -t autoct:1.1 .
+docker build -f docker/Dockerfile -t autoct:1.1.2 .
 docker image list
 ```
 
@@ -51,7 +51,7 @@ volume onto the docker container. The command below mounts  a `/data` directory.
 ```sh
 ## Replace  DATA_DIR_ON_HOST with the absolute path to your data on the host machine
 
-docker run --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.1 /bin/bash
+docker run --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.1.2 /bin/bash
 ls /data    # Should show contents of DATA_DIR_ON_HOST 
 
 ## Extras
@@ -96,12 +96,12 @@ Also note: the `--rm` option means the container `autoct-reg` would automaticall
 ## Replace  DATA_DIR_ON_HOST with the absolute path to an existing directory on the host machine
 ## On host machine: 
 
-docker run --rm --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.1 /bin/bash
+docker run --rm --name autoct-reg -v DATA_DIR_ON_HOST:/data -it autoct:1.1.2 /bin/bash
 
 ## Inside container:
 autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output
 
-autoct-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
+autoct-preprocessing -m illustration_data/MNI152_T1.1.2mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
      /data/output
 
 autoct-bone-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
@@ -128,7 +128,7 @@ Note: the --rm option means the container `autoct-jupyter-example` would be dele
 
 ```sh
 ## Replace DATA_DIR_ON_HOST with the absolute path to your data on the host machine
-docker run --rm --name autoct-jupyter-example -v DATA_DIR_ON_HOST:/data -p 8888:8888 -it autoct:1.1 
+docker run --rm --name autoct-jupyter-example -v DATA_DIR_ON_HOST:/data -p 8888:8888 -it autoct:1.1.2 
 ```
 ### Running On NERSC.
 
@@ -137,6 +137,6 @@ Refer to [this document](./nersc.md) for a detailed description.
 ### Running Tests:
 ```sh
 ## Replace REPO_DIR with the absolute path to autoct repository
-docker run --rm  -v REPO_DIR:/autocttesting -w /autocttesting  -it autoct:1.1  pytest tests
+docker run --rm  -v REPO_DIR:/autocttesting -w /autocttesting  -it autoct:1.1.2  pytest tests
 ```
 

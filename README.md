@@ -22,8 +22,6 @@ quantitative analysis for subjects' CT scans. Leveraging diffeomorphic transform
    - Use Bare-metal hosts to run illustration notebook and/or runautoct GUI notebook.
       - You would need to install dependencies as needed
       - Refer to [this document](./docs/baremetal.md) for instructions
-   - Running on NERSC:
-      - Refer to [this document](./docs/nersc.md) for a detailed description.
 
 ## Getting started
 

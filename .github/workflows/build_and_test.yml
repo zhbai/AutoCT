@@ -56,4 +56,4 @@ jobs:
 
       - name: Run Tests 
         run: |
-          docker run --rm --name autoct-jupyter-example  -v -v ${{ github.workspace }}:/autocttesting -w /autocttesting -it autoct:latest  pytest tests
+          docker run --rm --name autoct-testing -v -v ${{ github.workspace }}:/autocttesting -w /autocttesting -it autoct:latest pytest tests

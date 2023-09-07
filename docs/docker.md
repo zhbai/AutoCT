@@ -12,7 +12,7 @@
 
 #### AutoCT Repository:
 
-Clone the `autoct` repository.
+Clone the `AutoCT` repository.
 
 ```sh
 git clone https://github.com/zhbai/AutoCT.git
@@ -21,7 +21,7 @@ cd AutoCT
 
 #### Docker Image:
 
-- Docker image is based on `debian:stretch` and has the following installed:
+- Docker image is based on `python:3.7.17-slim-bullseye` and has the following installed:
     - Python (3.7)
     - ANTs (2.3.1)
     - FSL (5.0.10)

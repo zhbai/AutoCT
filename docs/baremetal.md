@@ -3,13 +3,9 @@
 ## Installing Development Mode
 
 ### Required Software
-    - Python (3.7.9)
+    - Python (3.7)
     - ANTs (2.3.1)
     - FSL (5.0.10)
-
-### Optional Software
-Afni's `3dresample` will be used by the `preprocessing` step if found in the `PATH`.
-    - AFNI (20.3.01)
 
 ```sh
 # This should show if it is in the path.
@@ -18,12 +14,13 @@ which 3dresample
 
 #### AutoCT Repository:
 
-Clone the `autoct` repository and enter the `tbi_registration` directory:
+Clone the `AutoCT` repository.
 
 ```sh
-git clone https://bitbucket.org/LBL_TBI/autoct.git
-cd autoct
+git clone https://github.com/zhbai/AutoCT.git
+cd AutoCT
 ```
+
 
 #### Installation Using Conda:
 

@@ -1,4 +1,4 @@
-name: Purl GitHub Actions
+name: AutoCT GitHub Actions
 
 on:
   push:
@@ -56,4 +56,4 @@ jobs:
 
       - name: Run Tests 
         run: |
-          docker run --rm --name autoct-jupyter-example  -v -v ${{ github.workspace }}:/autocttesting -w /autocttesting  -p 8888:8888 -it autoct:latest  pytest tests
+          docker run --rm --name autoct-jupyter-example  -v -v ${{ github.workspace }}:/autocttesting -w /autocttesting -it autoct:latest  pytest tests

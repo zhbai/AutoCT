@@ -1,4 +1,3 @@
-# ARG base_image=python:3.7-slim-stretch
 ARG base_image=python:3.7.17-slim-bullseye
   
 FROM ${base_image} AS base

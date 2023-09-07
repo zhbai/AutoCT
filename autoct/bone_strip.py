@@ -24,7 +24,7 @@ def bone_strip(pattern, out_dir):
     import nibabel as nib
     import tempfile
 
-    from .fsl import fsl_bone_strip
+    from .bone_strip_helper import do_bone_strip
     from .image_utils import rescale_img, calibrate_img, drop_img_dim
 
     logger.info('Arguments: {}:{}'.format(pattern, out_dir))
@@ -61,7 +61,7 @@ def bone_strip(pattern, out_dir):
             bone_strip_dir = os.path.join(out_dir, prefix, 'bone_strip')
             os.makedirs(bone_strip_dir, exist_ok=True)
             out_file = os.path.join(bone_strip_dir, prefix + __suffix)
-            img = fsl_bone_strip(temp_file, temp_dir.name)
+            img = do_bone_strip(temp_file, temp_dir.name)
             img = drop_img_dim(img)
             calibrate_img(img)
             nib.save(img, out_file)

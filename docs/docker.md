@@ -26,7 +26,6 @@ cd AutoCT
     - ANTs (2.3.1)
     - FSL (5.0.10)
 
-```
 #### Pull Docker Image From Dockerhub:
 You can also build the image. Skip to next section.
 

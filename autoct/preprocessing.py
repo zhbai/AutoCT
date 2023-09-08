@@ -2,7 +2,6 @@ import os
 import tempfile
 
 from glob import glob
-
 from . import utils 
 
 logger = utils.init_logger('autoct.preprocessing')

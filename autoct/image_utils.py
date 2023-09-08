@@ -1,7 +1,6 @@
 import numpy as np
 import nibabel  as nib
 
-
 def fix_pixdim(pixdim, ndim):
     dims = np.arange(1, 1 + ndim)
     temp = pixdim[dims]

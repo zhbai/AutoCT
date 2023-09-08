@@ -2,7 +2,6 @@ import logging
 import os
 
 logger = logging.getLogger('autoct.utils')
-
 _LOGGER_SETUP = False
 
 _err_msg_fmt = 'There were errors! (processed={}:expected={})'

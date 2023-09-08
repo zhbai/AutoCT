@@ -7,6 +7,7 @@ import sys
 from math import sqrt, fabs, acos, floor
 from types import SimpleNamespace
 
+
 np_type = np.double
 
 NIFTI_L2R=1    # Left to Right        

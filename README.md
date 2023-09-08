@@ -9,11 +9,12 @@ quantitative analysis for subjects' CT scans. Leveraging diffeomorphic transform
 ## Typical Workflow
 - Convert DICOM files to NIfTI.
 - Pre-process image orientation, voxel size/resolution, bias correction and pre-alignment.
-- Strip the bone from CT volume.
+- Strip the bone structures from the CT volume.
 - Register the bone-stripped CT scan to a given template.
 - Segment the bone-stripped CT scan based on a given atlas.
-- Calculate geometric measures.
-- Calculate statistics of warp image for each region of the brain.
+- Calculate geometric measures of the segments.
+- Calculate statistics of the deformation based on the anatomical 
+atlas.
 
 ![png](docs/autoCT.png)
 
@@ -26,7 +27,9 @@ quantitative analysis for subjects' CT scans. Leveraging diffeomorphic transform
 
 ## Getting started
 
-See `notebooks/illustration.ipynb` for demonstrating the approach on CT image preprocessing, registration, segmentation and statistical measurements for each region of the brain. 
+See `notebooks/illustration.ipynb` for demonstrating the approach on 
+CT image preprocessing, registration, segmentation and statistical 
+measurements for each region in a sample of brain CT scans. 
 
 ### Convert a series of .dcm files to .nii.gz files.
 

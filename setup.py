@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='autoct_registration',
+    name='autoct',
     version='1.1.2',
     include_package_data=True,
     url='https://github.com/zhbai/AutoCT/',

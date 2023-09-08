@@ -3,7 +3,6 @@ import pytest
 
 import autoct
 
-
 def input_dir():
     _data_dir = 'testdata'
     dir_path = os.path.dirname(os.path.realpath(__file__))

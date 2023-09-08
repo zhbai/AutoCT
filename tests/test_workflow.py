@@ -2,7 +2,6 @@ from os.path import join
 
 import autoct
 
-
 def test_workflow():
     import tempfile
 

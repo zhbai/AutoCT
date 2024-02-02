@@ -38,7 +38,7 @@ measurements for each region in a sample of brain CT scans.
 autoct.convert(pattern='illustration_data/dcmfiles/*',
             out_dir=output, 
             use_dcm2niix=True)
-plot_images(join(output, '*', 'convert', "*.nii.gz"))
+plot_images(join(output, '*', 'convert', '*.nii.gz'))
 ```
 
     Plotting output/ID_0eba6ca7-7473dee7c1/convert/ID_0eba6ca7-7473dee7c1.nii.gz:shape=(512, 512, 35)

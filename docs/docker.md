@@ -99,7 +99,7 @@ docker run --rm --name autoct-reg -v DATA_DIR_ON_HOST:/data -it zhebai/autoct:1.
 ## Inside container:
 autoct-convert --use-dcm2niix  'illustration_data/dcmfiles/*' /data/output
 
-autoct-preprocessing -m illustration_data/MNI152_T1.1.2mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
+autoct-preprocessing -m illustration_data/MNI152_T1_1mm_brain.nii.gz '/data/output/*/convert/*.nii.gz' \
      /data/output
 
 autoct-bone-strip '/data/output/*/preprocessing/*.nii.gz' /data/output
